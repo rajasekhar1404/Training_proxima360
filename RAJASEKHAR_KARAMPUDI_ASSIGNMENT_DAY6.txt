@@ -1,0 +1,193 @@
+============================================================
+1. List down all the Oracle database objects.
+Ans.
+Here are the different types of objects in Oracle.
+1. Table:
+    Oracle stores information in the form of tables, For example you can store students information about name class and marks,
+    A table is known as an entity and the columns as it attributes.
+
+2. views:
+    VIEWs are stored queries, views do not actually contain data, but instead derive their data from the tables upon which they are based.
+    Similar to tables, views can be queried, updated, inserted into and deleted from, with some restrictions.
+    All operations performed on a view actually affect the base tables of the view.
+    Views can provide an additional level of security by restricting access to a predetermined set of rows and columns of a table.
+    They can also hide data complexity and store complex queries.
+
+3. Indexes:
+    Indexes are optional schema objects that are associated with tables.
+    You can create indexes on tables to improve query performance. Just as the index in a guide helps you to quickly locate specific information.
+    an oracle database index provide quick access to table data.
+
+4. Synonyms:
+    A synonym is a name assigned to a table or view that may be used refer to it thereafter.
+    If you have an access to another users table, you may create a synonym for it and refer to it by the synonym alone,
+    Without entering the users name as a qualifier.
+
+5. Sequences:
+    A sequence is a unique number generator which can be assigned to the primary key of the tables.
+    It will generate a number based no the condition given while creating the Sequence.
+
+============================================================
+2. Give the syntax for Creating, Altering, and deleting a table with examples.
+Ans.
+--Creating a table
+    --Syntax
+    CREATE TABLE table_name (Column_names Datatypes Constraints);
+    --Example
+    CREATE TABLE Emp_details(Emp_id NUMBER PRIMARY KEY, Emp_name VARCHAR2(30), Dept_Name VARCHAR2(30), Salary NUMBER);
+    
+    --Syntax for creating a table from an existing table
+    CREATE TABLE new_table_name AS SELECT * FROM old_table_name;
+    
+    --Example
+    CREATE TABLE Emp_details_1 AS SELECT * FROM Emp_details;
+
+--Altering a table
+    --Syntax
+    ALTER TABLE table_name ADD column_name Datatype; --For adding a column
+    ALTER TABLE table_name DROP COLUMN column_name; --For deleting a column
+    ALTER TABLE table_name RENAME COLUMN column_name TO new_column_name; --For renaming a column name
+    ALTER TABLE table_name ADD CONSTRAINT constraint_name type_of_constraint(column_name); --For adding a constraint
+    ALTER TABLE table_name MODIFY column_name datatype; --For modifying datatype of a column
+    
+    --Example
+    ALTER TABLE Emp_details_1 ADD Joining_date DATE;
+    ALTER TABLE Emp_details_1 DROP COLUMN Joining_date;
+    ALTER TABLE Emp_details_1 RENAME COLUMN Joining_date TO Emp_Joining_Date;
+    ALTER TABLE Emp_details_1 ADD CONSTRAINT emp_id_check PRIMARY KEY(Emp_ID);
+    ALTER TABLE Emp_details_1 MODIFY Emp_Joining_Date VARCHAR2(30);
+    
+--Deleting a table
+    --Syntax
+    DROP TABLE table_name;
+    
+    --Example
+    DROP TABLE Emp_details;
+
+============================================================
+3. Give the syntax to Alter a table using a subquery.
+Ans.
+
+It is not possible to use subqueries in alter table statement,
+We can use subqueries only in 
+    1. WHERE clause
+    2. FROM Clause
+    3. SELECT Clause
+
+============================================================
+4. Why are views being used? Create a view to obtain data from the buyer and division table.
+Ans.
+Views are used for security purposes because they provide encapsulation of the name of the table.
+Data is in the virtual table. Views display only selected data. We can also use sql joins in the select statement in deriving the data for the view.
+
+--Creating a simple view with single table.
+CREATE OR REPLACE VIEW div_names AS SELECT DIV_NAME FROM DIVISION;
+--Retriving the data using view.
+SELECT * FROM div_names;
+
+--Creating a view with a subquery
+CREATE OR REPLACE VIEW local_buyers AS SELECT b.Buyer, b.Buyer_Name, b.Buyer_Phone, b.Buyer_Fax FROM Division d, Buyer b WHERE b.buyer = d.buyer;
+--Retriving the data using view
+SELECT Buyer_name, Buyer_phone FROM local_buyers WHERE Buyer BETWEEN 1000 AND 1005;
+
+============================================================
+5. Create a sequence that starts with 1 and increments by 10.
+Ans.
+/*Here is the sequence creation which will start with 1 and increment by 10, 
+it can increase upto 500, once it reaches to 500 it will startover because we Enabled the CYCLE,
+And upto 50 sequences can be preallocated in the database memory.*/
+
+CREATE SEQUENCE emp_id_auto
+INCREMENT BY 10
+START WITH 1
+MAXVALUE 500
+CYCLE
+CACHE 50;
+
+============================================================
+6. Write the query to insert data into a column in a table using a sequence.
+Ans.
+--Inserting data into table with a sequence.
+INSERT INTO Emp_details_1 VALUES('Rajasekhar', 'Admin', 24000, '01-06-2022', emp_id_auto.NEXTVAL);
+
+============================================================
+7. Modify the above-created sequence by incrementing the values by 100.
+Ans.
+--Modifying the sequence to increment by 100.
+ALTER SEQUENCE emp_id_auto INCREMENT BY 100 NOCACHE;
+
+============================================================
+8. Why do we need indexes?
+Ans.
+We need indexes to quickly access rows from a table, 
+it will provide faster access to data for operations that return a portion of a tables rows.
+we can have unlimited number of indexes on a table.
+
+============================================================
+9. List down all the key constraints that we employ in Oracle.
+Ans.
+1. PRIMARY KEY
+    The Primary Key can be used to make sure the column can only have unique and not null values.
+
+2. FOREIGN KEY
+    The Foreign Key provides the link between the two tables, it is a field in one table,
+    that refers to the PRIMARY KEY in another table, the table with foreign key called the child table,
+    and the table with the primary key is called the referenced or parant table.
+
+3. NOT NULL
+    The NOT NULL constraint is used to ensure that a given column of a table is never assigned the null value.
+    Once a NOT NULL constraint has been defined for a particular column, 
+    any insert or update operations that attempts to place null values in that column will fail.
+
+4. UNIQUE KEY
+    Unique key is used to make sure only the unique values will be inserted in a column,
+    we can have more than one unique key per table.
+
+5. CHECK
+    The check constraint enables a condition to check the value being entered into a record,
+    If the condition evaluates to false, the record violates the constraint and isn't entered the table.
+
+============================================================
+10. Give the syntax to create a primary key in a table with an example DDL.
+Ans.
+--Here is an example to add primary key for a column.
+CREATE TABLE Emp_details(Emp_id NUMBER PRIMARY KEY, Emp_name VARCHAR2(30), Dept_Name VARCHAR2(30), Salary NUMBER);
+
+--Adding primary key by altering table.
+ALTER TABLE Emp_details ADD CONSTRAINT constraint_pk PRIMARY KEY(Emp_ID);
+
+============================================================
+11. Use the above created primary key to create a foreign key in another table.
+Ans.
+--Here is the syntax for creating a table and adding foreign key to it using departments as parent table.
+
+    CREATE TABLE Emp_details
+    (Emp_ID NUMBER PRIMARY KEY,
+    Emp_Name VARCHAR2(30), 
+    Dept_name VARCHAR2(30),
+    CONSTRAINT constraint_fk FOREIGN KEY(Dept_name) REFERENCES departments(DEPT_NAME));
+
+============================================================
+12. Delete the above-created primary key with all its dependencies from another table.
+Ans.
+We can delete the foreign key's while dropping the primary key by using CASCADE key word.
+Example:
+--It will removes the PRIMARY KEY from departments table along with all the foreign's depended on it.
+ALTER TABLE departments DROP PRIMARY KEY CASCADE;
+
+============================================================
+13. What is the optional keyword that we use when deleting all the dependencies of a Primary key constraints
+Ans.
+It is CASCADE, by using this keyword we can delete all the reference foreign key's linked with the primary key,
+also if we add ON DELETE CASCADE with the FOREIGN KEY while creating a table,
+then if we delete a primary key value, it will automatically deletes all the foreign values related to that primary key value.
+
+Ex: I have two tables Departments with a primary key on dept_name, emp_details with a foreign key on dept_name.
+
+--Here is the structure of my Emp_details table.
+    CREATE TABLE Emp_details (Emp_ID NUMBER PRIMARY KEY, Emp_Name VARCHAR2(30), Dept_name VARCHAR2(30),
+    CONSTRAINT constraint_fk FOREIGN KEY(Dept_name) REFERENCES departments(DEPT_NAME) ON DELETE CASCADE);
+
+If i delete a department value from departments table, the employees belongs to that department are also deleted from Emp_details table.
+
+============================================================

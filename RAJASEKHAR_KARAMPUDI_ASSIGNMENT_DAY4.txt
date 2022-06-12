@@ -1,0 +1,142 @@
+============================================================
+1. How to avoid a Cartesian product when using Joins?
+Ans.
+Cartesian product is the result of joining every row in one table with every row in another table,
+This occurs when there is no WHERE cluase to restrict rows.
+
+To avoid a Cartesian product, you must provide how the tables should be combined.
+we have to pair rows based on matching values in one ro more columns of each table.
+
+============================================================
+2. Give the output for the following query: (Table query reference below)
+    select emp_name,salary from employee_salary es, emp e1 where e1.emp_id(+)=es.emp_id;
+Ans.
+The output will be as follows:
+    EMP_NAME | SALARY
+    ------------------
+    ABCD    |10000
+    WXYZ    |60000
+        -   |30000
+
+Explanation: 
+In the above QUERY we are selecting emp_name from emp table and salary from EMPLOYEE_SALARY table,
+both the column names are different so we have not added table names infront of column names,
+Then we are creating an alias to employee_salary AS es and another alias for emp table AS e1.
+Then we are checking the condition using where clause,
+when both the values in emp_id column of emp table and emp_id of EMPLOYEE_SALARY table are equal,
+along with that we have added (+) operatoer for emp_id of emp table, 
+so it will gonna return all the values from other table which is linked to emp(i.e. es) table,
+and if there is no match for that value in emp table, it will return null in that row.
+It is equal to RIGHT OUTER JOIN.
+
+============================================================
+3. What is minimum number of Join conditions required to perform Joins between 5 tables?
+Ans.
+We need minimum of 4 JOIN conditions to join 5 tables,
+Because in every single JOIN condition we can join only 2 tables,
+In 1 JOIN condition we can JOIN 2 tables,
+In 2 JOIN condition we can JOIN 3 tables,
+In 3 JOIN condition we can JOIN 4 tables,
+In 4 JOIN condition we can JOIN 5 tables,
+
+============================================================
+4. Write a Select query to display emp_name and address from emp and emp_add4 tables respectively without forming a Cartesian product.
+Ans.
+--Here is the QUERY to join emp and emp_add4 tables to retrive emp_name and address.
+SELECT emp.emp_name, emp_add4.address FROM emp, emp_add4 WHERE emp.emp_id = emp_add4.emp_id;
+
+============================================================
+5. Write a Select query to perform non-Equi Joins.
+Ans.
+--It will returns the emp_name and salary When emp_id is in between 1 and 3 and emp_name is ABCD.
+SELECT emp.emp_name, employee_salary.salary FROM emp, employee_salary WHERE employee_salary.emp_id BETWEEN 1 AND 3 AND emp.emp_name = 'ABCD';
+
+--It will return the emp_name and salary when emp_name starts with A and salary is less than 200000.
+SELECT e1.emp_name, e2.salary FROM emp e1, employee_salary e2 WHERE e1.emp_name LIKE 'A%' AND e2.salary < 20000;
+
+============================================================
+6. Write a Select query to display salaries and emp_name where the address is in Hyderabad.
+Ans.
+--Here is the QUERY to display salaries and emp_name when the address is Hyderabad
+/*
+In this case we are Joining 3 tables employee_salary for getting salary information
+emp for getting employee name(emp_name)
+emp_add4 for checking the location.
+*/
+SELECT employee_salary.salary, emp.emp_name 
+FROM employee_salary, emp, emp_add4 
+WHERE emp.emp_id = emp_add4.emp_id 
+AND emp.emp_id = employee_salary.emp_id 
+AND emp_add4.address = 'HYD';
+
+============================================================
+7. Write a Select statement to display the salary added with variable pay for each employee.
+Ans.
+--Here is the QUERY to display the salary with variable pay for each employee.
+SELECT salary+variable AS "Fianl payout", emp_name
+FROM employee_salary, emp
+WHERE employee_salary.emp_id = emp.emp_id;
+
+============================================================
+8. What is Group by function and why is it used?
+Ans.
+The GROUP BY statement groups rows that have the same values into summary rows, like find the number employees available in emp table.
+The GROUP BY statement is often used with aggregate functions (COUNT(), MAX(), MIN(), SUM(), AVG(), STDDEV(), VARIANCE()) to group the result set by one or more columns.
+
+============================================================
+9. Give an example query for all the group functions with proper syntax.
+Ans.
+    1. SUM: Returns the total sum of all the row values.
+        SELECT SUM(salary) FROM employee_salary;
+
+    2. MIN: Returns the lowest values in the given column.
+        SELECT MIN(salary) FROM employee_salary;
+
+    3. MAX: Returns the highest value in the given column.
+        SELECT MAX(salary) FROM employee_salary;
+
+    4. AVG: Returns the average of all the values.
+        SELECT AVG(salary) FROM employee_salary;
+
+    5. COUNT: Returns the number of records in a column.
+        SELECT COUNT(emp_name) FROM emp;
+
+    6. STDDEV: Returns the Standard deviation of a set of numbers.
+        SELECT STDDEV(salary) FROM employee_salary;
+
+    7. VARIANCE: Returns the variance of a set of numbers, it is equals to square root of standard deviation.
+        SELECT VARIANCE(salary) FROM employee_salary;
+
+============================================================
+10. What is the difference between where and having clause?
+Ans.
+WHERE clause is used to filter the records from a table based on a specified condition, 
+whereas HAVING clause is used to filter the records form the groups based on the specified condition.
+WHERE clause can be used with SELECT, UPDATE and DELETE statements,
+HAVING cluase can be used with Only GROUP BY cluase.
+
+============================================================
+11. Write a Select query to return student's name and sum of his/her marks from the student table where the sum of marks is greater than 400.
+Ans.
+--Finding the student'n names and sum of their marks who are having more than 400.
+/*
+There are two possible ways to find this result.
+We can use + operater and WHERE cluase,
+We can also use SUM Function and Having cluse with a GROUP BY Function.
+*/
+--Using WHERE Clause.
+SELECT Student_Name, Maths+English+Physics+Social+Biology AS Total_Marks FROM School WHERE Maths+English+Physics+Social+Biology > 400;
+
+--Using SUM ang GROUP BY Functions.
+SELECT SUM(Maths+English+Physics+Social+Biology) AS Total_Marks FROM School GROUP BY Student_Name HAVING SUM(Maths+English+Physics+Social+Biology) > 400;
+
+============================================================
+12. Suppose you have a column with values 1 and null and you want to get an average of 0.5. Write a query to execute this.
+Ans.
+--Finding the average when having null values.
+SELECT AVG(NVL(emp_id, 0)) AS AVG FROM Customers;
+
+--Another way For finding Average when we have null values with decode.
+SELECT AVG(DECODE(emp_id, null, 0, emp_id)) AS AVG FROM Customers;
+
+============================================================
