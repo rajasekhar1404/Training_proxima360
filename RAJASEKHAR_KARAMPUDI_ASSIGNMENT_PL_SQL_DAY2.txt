@@ -1,0 +1,51 @@
+============================================================
+1. Practice DML & Select statements in PL/SQL block.
+
+============================================================
+2. Give examples for IF, IF-ELSE, IF-ELSIF statements and also explain its usages.
+Ans.
+--IF Example
+DECLARE
+    L_Emp_ID Employee.Emp_ID%TYPE;
+    L_Emp_Dept Employee.Dept_Name%TYPE;
+BEGIN
+    L_Emp_ID := 105;
+    SELECT Dept_Name INTO L_Emp_Dept FROM Employee WHERE Emp_ID = L_Emp_ID;
+    
+    IF L_Emp_Dept = 'HR' THEN
+        UPDATE Employee SET Salary = Salary+500 WHERE Emp_ID = L_Emp_ID;
+        DBMS_OUTPUT.PUT_LINE(L_Emp_ID || ' Salary updated.');
+    END IF;
+END;
+/
+
+--IF-ELSE Example
+DECLARE
+    L_Emp_ID Employee.Emp_ID%TYPE;
+    L_Emp_Name Employee.Emp_Name%TYPE;
+BEGIN
+    L_Emp_ID := 113;
+    SELECT Emp_name INTO L_Emp_Name FROM Employee WHERE Emp_ID = L_Emp_ID;
+    
+    IF SQL%NOTFOUND THEN
+        DBMS_OUTPUT.PUT_LINE('DATA NOT FOUND');
+    END IF;
+END;
+/
+
+============================================================
+What are different types of Loops? Write their syntax.
+
+============================================================
+Give examples of nested IF statements.
+
+============================================================
+What is a nested loop? Give examples.
+
+============================================================
+Explain logical conditions in PL/SQL.
+
+============================================================
+Please go through the different conditions/rules for LOOPs and IF statements.
+
+============================================================
