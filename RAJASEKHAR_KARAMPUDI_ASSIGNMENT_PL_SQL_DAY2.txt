@@ -1,5 +1,38 @@
 ============================================================
 1. Practice DML & Select statements in PL/SQL block.
+Ans.
+--Example for INSERT in pl/sql.
+DECLARE
+    L_Emp_id Employee.Emp_ID%TYPE;
+    L_Emp_name VARCHAR2(30) := 'Vamshi';
+    L_Dept_name VARCHAR2(30) := 'Admin';
+    L_Salary NUMBER := 8599;
+BEGIN
+    SELECT MAX(Emp_id) INTO L_Emp_id FROM Employee;
+    L_Emp_id := L_Emp_id + 1;
+    
+    INSERT INTO Employee VALUES(L_Emp_id, L_Emp_name, L_Dept_name, L_Salary);
+    DBMS_OUTPUT.PUT_LINE(L_Emp_name || ' data added to the database.');
+END;
+/
+
+--Example for UPDATE in pl/sql.
+DECLARE
+    L_Dept_name employee.dept_name%TYPE := :val;
+BEGIN
+    UPDATE Employee SET Salary = Salary + 500 WHERE Dept_name = l_dept_name;
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' Rows updated.');
+END;
+/
+
+--Example for DELETE in pl/sql.
+DECLARE
+    L_Emp_name Employee.Emp_name%TYPE := 'Rajasekhar';
+BEGIN
+    DELETE FROM Employee WHERE Emp_name = L_Emp_name;
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' Rows updated.');
+END;
+/
 
 ============================================================
 2. Give examples for IF, IF-ELSE, IF-ELSIF statements and also explain its usages.
@@ -21,31 +54,139 @@ END;
 
 --IF-ELSE Example
 DECLARE
-    L_Emp_ID Employee.Emp_ID%TYPE;
-    L_Emp_Name Employee.Emp_Name%TYPE;
+    L_Job_title VARCHAR2(30);
+    L_min_salary jobs.min_salary%TYPE;
 BEGIN
-    L_Emp_ID := 113;
-    SELECT Emp_name INTO L_Emp_Name FROM Employee WHERE Emp_ID = L_Emp_ID;
+    L_Job_title := :title;
     
-    IF SQL%NOTFOUND THEN
-        DBMS_OUTPUT.PUT_LINE('DATA NOT FOUND');
+    IF L_Job_title = 'Accountant' THEN
+        DBMS_OUTPUT.PUT_LINE(L_Job_Title || ' openings available.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('No jobs available for this role');
+    END IF;
+END;
+/
+
+--IF-ELSIF-ELSE
+DECLARE
+    L_Emp_ID Employee.Emp_ID%TYPE;
+    L_Emp_Dept Employee.Dept_name%TYPE;
+BEGIN
+    L_Emp_ID := 111;
+    SELECT Dept_name INTO L_Emp_Dept FROM Employee WHERE Emp_ID = L_Emp_ID;
+    
+    IF L_Emp_Dept = 'Admin' THEN
+        DBMS_OUTPUT.PUT_LINE('Employee working in Admin department');
+    ELSIF L_Emp_Dept = 'HR' THEN
+        DBMS_OUTPUT.PUT_LINE('Employee working under HR department');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Employee data not found');
+    END IF;
+    
+END;
+/
+
+--
+
+============================================================
+3. What are different types of Loops? Write their syntax.
+Ans.
+We have 3 types of loops in pl/sql.
+1. Basic loop:
+Syntax:
+    LOOP condition statements EXIT WHEN condition END LOOP;
+--Basic loop example.
+DECLARE
+    L_emp_name Employee.emp_name%TYPE;
+    L_emp_id Employee.Emp_id%TYPE := 102;
+BEGIN
+    LOOP
+    L_emp_id := L_emp_id+1;
+    SELECT Emp_name INTO L_Emp_name FROM Employee WHERE Emp_id = L_emp_id;
+    DBMS_OUTPUT.PUT_LINE('Name of the employee ' ||L_Emp_name||' and employee id is '||L_Emp_id);
+    EXIT WHEN L_emp_id = 105;
+    END LOOP;
+END;
+
+2. FOR loop:
+Syntax:
+    FOR operator IN range LOOP statements END LOOP;
+--For loop example
+DECLARE
+    S_no NUMBER;
+BEGIN
+    S_no := 10;
+    FOR i IN 10.. 15 LOOP
+    DBMS_OUTPUT.PUT_LINE(i);
+    END LOOP;
+END;
+/
+
+3. While loop.
+Syntax:
+
+WHILE condition LOOP statements END LOOP;
+
+Example:
+DECLARE
+    Score NUMBER := 5;
+BEGIN
+    WHILE Score < 25 LOOP
+    DBMS_OUTPUT.PUT_LINE('Score is ' || Score);
+    Score := Score + 5;
+    END LOOP;
+END;
+/
+
+============================================================
+4. Give examples of nested IF statements.
+Ans.
+--Example for nested IF statements.
+DECLARE
+    val_1 NUMBER;
+    val_2 NUMBER;
+BEGIN
+    val_1 := 10;
+    val_2 := 15;
+    IF val_1 > 5 THEN
+        IF val_2 < 20 THEN
+        DBMS_OUTPUT.PUT_LINE(val_1 + val_2);
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('val_2 greater than 20');
+        END IF;
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('val_1 is lesser than 5.');
     END IF;
 END;
 /
 
 ============================================================
-What are different types of Loops? Write their syntax.
+5. What is a nested loop? Give examples.
+Ans.
+Here is an example for nested loop.
+DECLARE
+    val_1 NUMBER;
+    val_2 NUMBER;
+BEGIN
+    val_1 := 5;
+    val_2 := 20;
+    LOOP
+    DBMS_OUTPUT.PUT_LINE('val_1 is ' || val_1);
+    val_1 := val_1 + 5;
+    EXIT WHEN val_1 >= 20;
+        LOOP
+        DBMS_OUTPUT.PUT_LINE('val_2 is '|| val_2);
+        val_2 := val_2 - 5;
+        EXIT WHEN val_2 <= 0;
+        END LOOP;
+    END LOOP;
+END;
+/
 
 ============================================================
-Give examples of nested IF statements.
+6. Explain logical conditions in PL/SQL.
 
 ============================================================
-What is a nested loop? Give examples.
-
-============================================================
-Explain logical conditions in PL/SQL.
-
-============================================================
-Please go through the different conditions/rules for LOOPs and IF statements.
+7. Please go through the different conditions/rules for LOOPs and IF statements.
 
 ============================================================
