@@ -1,1 +1,37 @@
+==================================================
+1). Give the syntax with examples for the record type
 
+==================================================
+2). Create a record for buyer table data.
+
+==================================================
+3). What are the advantages of using %ROWTYPE?
+
+==================================================
+4). How to access the fields in a record?
+
+==================================================
+5). Give the syntax with examples for table type
+
+==================================================
+6). Create a table-type with the employee name field from the emp table.
+
+==================================================
+7). Assign random data into table type for 5 indexes using for loop.
+
+==================================================
+8). What is the use of extend function in table type?
+
+==================================================
+9). What are the types of cursors used in PLSQL?
+
+==================================================
+10). Create a cursor having buyer and buyer name from the buyer table for buyers greater than 1200.
+
+==================================================
+11). Practice all the cursor type attributes with examples for both implicit and explicit cursors.
+
+==================================================
+12). Practice all the table types attributes with examples.
+
+==================================================
