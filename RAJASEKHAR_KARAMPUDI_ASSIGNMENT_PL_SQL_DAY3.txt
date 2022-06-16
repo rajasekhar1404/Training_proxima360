@@ -167,6 +167,10 @@ END;
 /
 ==================================================
 8). What is the use of extend function in table type?
+Ans.
+Extends allocates the memory and appends an element to the VARRAY,
+If used without argument it appends single null element and if used with argument then appends n number of elements to the collection.
+Where n is the integer you supplied as arguments to the procedure EXTEND.
 
 ==================================================
 9). What are the types of cursors used in PLSQL?
@@ -273,5 +277,39 @@ END;
 ==================================================
 12). Practice all the table types attributes with examples.
 Ans.
+--Extend
+DECLARE
+    TYPE my_nestedtable IS TABLE OF number;
+    nt_obj my_nestedtable := my_nestedtable();
+BEGIN
+    nt_obj.EXTEND;
+    nt_obj(1) := 10;
+    DBMS_OUTPUT.PUT_LINE(nt_obj(1));
+END;
+/
 
+--TRIM and COUNT
+DECLARE
+    TYPE my_nestedtable IS TABLE OF number;
+    nt_obj my_nestedtable := my_nestedtable(1,2,3,4,5);
+BEGIN
+    nt_obj.TRIM;
+    FOR i IN 1..nt_obj.COUNT
+    LOOP
+    DBMS_OUTPUT.PUT_LINE(nt_obj(i));
+    END LOOP;
+END;
+/
+
+--FIRST and LAST
+DECLARE
+    TYPE my_nestedtable IS TABLE OF number;
+    nt_obj my_nestedtable := my_nestedtable(1,2,3,4,5);
+BEGIN
+    FOR i IN nt_obj.FIRST..nt_obj.LAST
+    LOOP
+    DBMS_OUTPUT.PUT_LINE(nt_obj(i));
+    END LOOP;
+END;
+/
 ==================================================
