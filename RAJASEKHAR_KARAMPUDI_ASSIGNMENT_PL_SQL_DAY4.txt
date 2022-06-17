@@ -1,8 +1,77 @@
 =========================================================
 1. DML operations in PL/SQL with procedures and Exceptions.
+Ans.
+Example_1:
+/*
+Below script will create a procedure insert_emp, 
+whenever this procedure is executed with valid parameters, it will insert a employee information into employee table.
+*/
+
+CREATE OR REPLACE PROCEDURE insert_emp(
+        p_emp_name VARCHAR2,
+        p_emp_dept VARCHAR2,
+        p_sal NUMBER) AS
+BEGIN    
+    INSERT INTO Employee VALUES(emp_id_gen.NEXTVAL, p_emp_name, p_emp_dept, p_sal);
+    DBMS_OUTPUT.PUT_LINE(p_emp_name || ' data inserted into employee.');
+END;
+/
+
+EXECUTE insert_emp('Raj', 'IT', 1500);
+
+Example_2:
+/*
+Below code will update the salary of the department given in the parameters to the amount given.
+it will take two parameters 1 for department name, 2 for amount of hike.
+If the department passed through arguments was invalid then the expetion will raises.
+*/
+
+CREATE OR REPLACE PROCEDURE update_sal(
+        dept VARCHAR2,
+        hike NUMBER) AS
+        
+        dept_not_found EXCEPTION;
+BEGIN    
+    UPDATE Employee SET SALARY = SALARY + hike WHERE dept_name = dept;
+    IF SQL%FOUND THEN
+    DBMS_OUTPUT.PUT_LINE(dept || ' Employees salary updated with '||hike);
+    ELSE
+    RAISE dept_not_found;
+    END IF;
+EXCEPTION
+    WHEN dept_not_found THEN
+    DBMS_OUTPUT.PUT_LINE('Employee data was not found.');
+END;
+/
+
+EXECUTE update_sal('HR', 200);
+
+Example_3:
+/*
+Below code will delete's the employee information from the table with the of the given employee id.
+if the employee not found then it will throw an exception as defined.
+*/
+CREATE OR REPLACE PROCEDURE del_emp(e_id NUMBER) AS
+    not_found EXCEPTION;
+BEGIN
+    DELETE FROM EMPLOYEE WHERE Emp_id = e_id;
+    DELETE FROM EMPLOYEE WHERE Emp_id = 500;
+    IF SQL%FOUND THEN
+    DBMS_OUTPUT.PUT_LINE(e_id ||' Employee information removed from database.');
+    ELSE
+    RAISE not_found;
+    END IF;
+EXCEPTION
+    WHEN not_found THEN
+    DBMS_OUTPUT.PUT_LINE('Please check the id, there is no data belongs to this id.');
+END;
+/
+
+EXECUTE del_emp(115);
 
 =========================================================
 2. Using procedures and Exceptions with Nested blocks.
+Ans.
 
 =========================================================
 3. SELECT INTO in pl/sql along with procedures and Exceptions.
