@@ -105,19 +105,106 @@ END;
 
 =========================================================
 3. SELECT INTO in pl/sql along with procedures and Exceptions.
+Ans.
+CREATE OR REPLACE PROCEDURE dept_emp_info(dept VARCHAR2) AS
+    L_Emp_id employee.emp_id%TYPE;
+    L_Emp_name employee.emp_name%TYPE;
+    L_Salary employee.salary%TYPE;
 
+    CURSOR emp_cur IS SELECT Emp_id, Emp_name, Salary FROM Employee WHERE dept_name = dept;
+    wrong_dept EXCEPTION;
+BEGIN
+    OPEN emp_cur;
+    LOOP
+    FETCH emp_cur INTO L_Emp_id, L_Emp_name, L_Salary;
+    IF emp_cur%FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Employee ID: ' ||L_Emp_id ||' Employee name: '|| L_Emp_name ||' Employee salary: '|| L_Salary);
+    ELSE
+    RAISE wrong_dept;
+    END IF;
+    EXIT WHEN emp_cur%NOTFOUND;
+    END LOOP;
+EXCEPTION
+    WHEN wrong_dept THEN
+    DBMS_OUTPUT.PUT_LINE('Invalid department id');
+END;
+/
 =========================================================
 4. Conditional statements.
-
+Ans.
+CREATE OR REPLACE PROCEDURE vaccination_cities(type_of_vaccine VARCHAR2) AS
+    Vaccine_1 CONSTANT VARCHAR2(30) := 'COVAXIN';
+    Vaccine_2 CONSTANT VARCHAR2(30) := 'COVISHIELD';
+    TYPE tb_type IS TABLE OF VARCHAR2(50) INDEX BY BINARY_INTEGER;
+    Vacination_center tb_type;
+BEGIN
+    Vacination_center(1) := 'DSNR';
+    Vacination_center(2) := 'KOTI';
+    Vacination_center(3) := 'UPPAL';
+    Vacination_center(4) := 'Hitech_city';
+    Vacination_center(5) := 'Jubli_hills';
+    Vacination_center(6) := 'Banjara_hills';
+    Vacination_center(7) := 'Kukatpalli';
+    Vacination_center(8) := 'Patancheru';
+    
+    IF Vaccine_1 = type_of_vaccine THEN
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(2));
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(4));
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(6));
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(8));
+    ELSIF Vaccine_2 = type_of_vaccine THEN
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(1));
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(3));
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(5));
+        DBMS_OUTPUT.PUT_LINE(Vacination_center(7));
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Invalid vaccine type');
+    END IF;
+END;
+/
 =========================================================
 5. Loops.
+Ans.
+CREATE OR REPLACE PROCEDURE item_in_stores(L_item NUMBER) AS
 
+CURSOR stores_list IS SELECT STORE FROM STORE WHERE ITEM = L_item;
+    store_no NUMBER;
+BEGIN
+    OPEN stores_list;
+    LOOP
+        FETCH stores_list INTO store_no;
+        IF stores_list%FOUND THEN
+            DBMS_OUTPUT.PUT_LINE(store_no);
+        END IF;
+        EXIT WHEN stores_list%NOTFOUND;
+    END LOOP;
+    CLOSE stores_list;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Wrong item number, please check the item number and try again.');
+END;
+/
 =========================================================
 6. PL/SQL Record
+Ans.
 
 =========================================================
 7. PL/SQL ROWTYPE
-
+Ans.
+CREATE OR REPLACE PROCEDURE emp_info(L_Emp_id NUMBER) AS
+    emp_details Employee%ROWTYPE;
+    invalid EXCEPTION;
+    PRAGMA EXCEPTION_INIT(invalid, -06550);
+BEGIN
+    SELECT emp_name, dept_name, salary INTO emp_details.emp_name, emp_details.dept_name, emp_details.salary FROM Employee WHERE Emp_id = L_Emp_id;
+    DBMS_OUTPUT.PUT_LINE(emp_details.emp_name || ' is working in ' || emp_details.dept_name ||' department, with a package of '||emp_details.salary);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('NO employees found belongs to the given id.');
+    WHEN invalid THEN
+        DBMS_OUTPUT.PUT_LINE('invalid employee id.');
+END;
+/
 =========================================================
 8. PL/SQL Tables
 
