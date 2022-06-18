@@ -72,6 +72,38 @@ EXECUTE del_emp(115);
 =========================================================
 2. Using procedures and Exceptions with Nested blocks.
 Ans.
+REATE OR REPLACE PROCEDURE emp_info AS
+    L_Dept_name Employee.dept_name%TYPE;
+
+CURSOR emp_cur IS SELECT Emp_id, Emp_name, Salary FROM EMPLOYEE WHERE DEPT_NAME = L_Dept_name;
+
+BEGIN
+    L_Dept_name := 'HR';
+        DBMS_OUTPUT.PUT_LINE('Employee''s details of '||L_Dept_name||' department.');
+    DECLARE
+        L_Emp_id employee.emp_id%TYPE;
+        L_Emp_name employee.emp_name%TYPE;
+        L_Salary employee.salary%TYPE;    
+    BEGIN
+        OPEN emp_cur;
+        LOOP
+        /*
+            SELECT Emp_ID, Emp_name, salary 
+            INTO L_Emp_id, L_Emp_name, L_Salary 
+            FROM Employee WHERE Dept_name = L_Dept_name; */
+            
+            FETCH emp_cur INTO L_Emp_id, L_Emp_name, L_Salary;
+            
+            DBMS_OUTPUT.PUT_LINE('Employee id: ' || L_Emp_id || CHR(10)
+                                ||'Employee name: ' || L_Emp_name || CHR(10)
+                                ||'Employee department: '|| L_Dept_name || CHR(10)
+                                ||'Salary: ' || L_Salary || CHR(10));
+        EXIT WHEN SQL%NOTFOUND;
+        END LOOP;
+        CLOSE emp_cur;
+    END;
+END;
+/
 
 =========================================================
 3. SELECT INTO in pl/sql along with procedures and Exceptions.
