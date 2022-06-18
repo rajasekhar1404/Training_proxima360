@@ -72,38 +72,36 @@ EXECUTE del_emp(115);
 =========================================================
 2. Using procedures and Exceptions with Nested blocks.
 Ans.
-REATE OR REPLACE PROCEDURE emp_info AS
-    L_Dept_name Employee.dept_name%TYPE;
-
-CURSOR emp_cur IS SELECT Emp_id, Emp_name, Salary FROM EMPLOYEE WHERE DEPT_NAME = L_Dept_name;
-
+/*
+Below code will create a procedure of math_table, it will one argument,
+whenever a number value greater than 0 is entered in the input it will return the table of that number.
+if the number is invalid then it will send an predefined error.
+*/
+CREATE OR REPLACE PROCEDURE math_table(tb_no VARCHAR2) AS
+    L_Result NUMBER;
 BEGIN
-    L_Dept_name := 'HR';
-        DBMS_OUTPUT.PUT_LINE('Employee''s details of '||L_Dept_name||' department.');
     DECLARE
-        L_Emp_id employee.emp_id%TYPE;
-        L_Emp_name employee.emp_name%TYPE;
-        L_Salary employee.salary%TYPE;    
+        tb_val NUMBER;
     BEGIN
-        OPEN emp_cur;
-        LOOP
-        /*
-            SELECT Emp_ID, Emp_name, salary 
-            INTO L_Emp_id, L_Emp_name, L_Salary 
-            FROM Employee WHERE Dept_name = L_Dept_name; */
-            
-            FETCH emp_cur INTO L_Emp_id, L_Emp_name, L_Salary;
-            
-            DBMS_OUTPUT.PUT_LINE('Employee id: ' || L_Emp_id || CHR(10)
-                                ||'Employee name: ' || L_Emp_name || CHR(10)
-                                ||'Employee department: '|| L_Dept_name || CHR(10)
-                                ||'Salary: ' || L_Salary || CHR(10));
-        EXIT WHEN SQL%NOTFOUND;
+        tb_val := TO_NUMBER(tb_no);
+    IF tb_no > 0 THEN
+        FOR i IN 1..10 LOOP
+        L_Result := tb_no * i;
+        DBMS_OUTPUT.PUT_LINE(tb_no || ' * '|| i ||' = ' || L_Result);
         END LOOP;
-        CLOSE emp_cur;
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Value must be greater than 0.');
+    END IF;
     END;
+EXCEPTION
+    WHEN VALUE_ERROR THEN
+    DBMS_OUTPUT.PUT_LINE('Please enter a valid number, your input '||tb_no|| ' is not valid.');
 END;
 /
+
+BEGIN
+    math_table('RAJ');
+END;
 
 =========================================================
 3. SELECT INTO in pl/sql along with procedures and Exceptions.
