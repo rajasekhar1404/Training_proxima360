@@ -272,7 +272,97 @@ END;
 /
 =========================================================
 10. Types of Exceptions with examples.
+Ans.
+We have 3 tpyes of exception.
+1. Predefined Exception
+2. NON predefined exceptions
+3. User-defined exceptions.
 
+1. Predefined Exception are the Exceptions which are already declared by the oracle, we can directly access them by using the name of the error in the exception block,
+here are the examples for predefined exceptions.
+
+1. DUP_VAL_ON_INDEX
+This exception will occur when duplicate values are trying to insert into a column which is having unique constraint.
+
+Example:
+BEGIN
+INSERT INTO unique_check VALUES(1000);
+EXCEPTION
+WHEN DUP_VAL_ON_INDEX THEN
+DBMS_OUTPUT.PUT_LINE('ALREADY EXISTS');
+END;
+/
+
+2. INVALID_CURSOR
+This will occur when trying to perform cursor operation before opening.
+
+Example:
+DECLARE
+CURSOR check_cur IS SELECT Emp_name FROM Employee WHERE Emp_id = 101;
+L_Emp_name VARCHAR2(30);
+BEGIN
+FETCH check_cur INTO L_Emp_name;
+EXCEPTION
+WHEN INVALID_CURSOR THEN
+DBMS_OUTPUT.PUT_LINE('Please open the cursor to access the data and close after using it.');
+END;
+/
+
+3. INVALID_NUMBER
+This will occur when conversion of a character string into a number fails, because the string is not a valid number.
+
+Example:
+DECLARE
+emp_id NUMBER;
+Emp_name VARCHAR2(30) := 'RAJA';
+BEGIN
+insert into employee (emp_id) values('raja');
+EXCEPTION
+WHEN INVALID_NUMBER THEN
+DBMS_OUTPUT.PUT_LINE('ENTER A VALID NUMBER.');
+END;
+/
+
+4. VALUE_ERROR
+This will occure when arithmetic or conversion error occurs.
+
+Example:
+DECLARE
+emp_id VARCHAR2(10);
+BEGIN
+emp_id := 'raja';
+emp_id := TO_NUMBER(emp_id);
+EXCEPTION
+WHEN VALUE_ERROR THEN
+DBMS_OUTPUT.PUT_LINE('ENTER A VALID NUMBER.');
+END;
+/
+
+5. TOO_MANY_ROWS
+It will return when a SELECT INTO statement returned more than one row.
+
+Example:
+DECLARE
+L_emp_name VARCHAR2(30);
+BEGIN
+    SELECT Emp_name INTO L_emp_name FROM Employee;
+EXCEPTION
+WHEN TOO_MANY_ROWS THEN
+DBMS_OUTPUT.PUT_LINE('Your statement returning more then requested rows.');
+END;
+/
+
+6. ZERO_DIVIDE
+It will occur when trying to divide any value with 0.
+
+Example:
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(4/0);
+EXCEPTION
+WHEN ZERO_DiVIDE THEN
+DBMS_OUTPUT.PUT_LINE('What is your school name bro, how can you devide something with 0');
+END;
+/
 =========================================================
 11. Procedures without parameters.
 
