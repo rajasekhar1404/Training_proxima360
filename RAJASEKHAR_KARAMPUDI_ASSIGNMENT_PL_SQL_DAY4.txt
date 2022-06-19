@@ -187,7 +187,29 @@ END;
 =========================================================
 6. PL/SQL Record
 Ans.
-
+CREATE OR REPLACE PROCEDURE rec_ex AS
+    TYPE L_interview IS RECORD(
+        L_Candidate_id Interviews.candidate_id%TYPE,
+        L_Name INTERVIEWS.NAME%TYPE,
+        L_COMPANY_NAME INTERVIEWS.COMPANY_NAME%TYPE,
+        L_INTERVIEW_DATE INTERVIEWS.INTERVIEW_DATE%TYPE,
+        L_INTERVIEW_MODE INTERVIEWS.INTERVIEW_MODE%TYPE,
+        L_INTERVIEW_STATUS INTERVIEWS.INTERVIEW_STATUS%TYPE
+    );
+    
+    Interview_info L_interview;
+BEGIN
+    SELECT candidate_id, name, company_name, interview_date, interview_mode, interview_status
+    INTO Interview_info.L_Candidate_id, Interview_info.L_Name, Interview_info.L_COMPANY_NAME, Interview_info.L_INTERVIEW_DATE,
+    Interview_info.L_INTERVIEW_MODE, Interview_info.L_INTERVIEW_STATUS FROM INTERVIEWS WHERE candidate_id = 1;
+    DBMS_OUTPUT.PUT_LINE('Candidate_id: ' || Interview_info.L_Candidate_id ||
+                        ' Name: ' || Interview_info.L_Name ||
+                        ' Company name: ' || Interview_info.L_COMPANY_NAME ||
+                        ' Interview date: ' ||Interview_info.L_INTERVIEW_DATE ||
+                        ' Interview mode: ' || Interview_info.L_INTERVIEW_MODE ||
+                        ' Interview status: ' || Interview_info.L_INTERVIEW_STATUS);
+END;
+/
 =========================================================
 7. PL/SQL ROWTYPE
 Ans.
@@ -207,10 +229,47 @@ END;
 /
 =========================================================
 8. PL/SQL Tables
+Ans.
+CREATE OR REPLACE PROCEDURE selected_list AS
+CURSOR selected_candidates IS SELECT Name FROM INTERVIEWS WHERE INTERVIEW_STATUS = 'Selected';
+TYPE tb_type IS TABLE OF interviews.name%TYPE INDEX BY BINARY_INTEGER;
+candidate_name tb_type;
+i NUMBER;
+BEGIN
+    i := 1;
+    OPEN selected_candidates;    
+    LOOP
+    FETCH selected_candidates INTO candidate_name(i);
+    DBMS_OUTPUT.PUT_LINE(candidate_name(i));
+    i := i+1;
+    EXIT WHEN selected_candidates%NOTFOUND OR i > 4;
+    END LOOP;
+    CLOSE selected_candidates;
+END;
+/
 
+exec selected_list;
 =========================================================
 9. Cursors.
+Ans.
+CREATE OR REPLACE PROCEDURE no_manager AS
+CURSOR dept_cur IS SELECT DEPARTMENT_ID, DEPARTMENT_NAME, LOCATION_ID FROM DEPARTMENTS WHERE MANAGER_ID IS NULL;
+L_dept_id NUMBER;
+L_dept_name VARCHAR2(30);
+L_location_id NUMBER;
 
+BEGIN
+    OPEN dept_cur;
+    FOR i IN 1..10 LOOP
+    FETCH dept_cur INTO L_dept_id, L_dept_name, L_location_id;
+    DBMS_OUTPUT.PUT_LINE(L_dept_id || ' | ' ||L_dept_name || ' | ' ||L_location_id );
+    END LOOP;
+    CLOSE dept_cur;
+EXCEPTION
+    WHEN INVALID_CURSOR THEN
+    DBMS_OUTPUT.PUT_LINE('Please check the cursor.');
+END;
+/
 =========================================================
 10. Types of Exceptions with examples.
 
