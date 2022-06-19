@@ -363,10 +363,76 @@ WHEN ZERO_DiVIDE THEN
 DBMS_OUTPUT.PUT_LINE('What is your school name bro, how can you devide something with 0');
 END;
 /
+
+2. NON-predefined errors, these are the errors which are not declared by oracle, we can handle them by using the ora id.
+
+Example:
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('RAJ'+1);
+EXCEPTION
+    WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('ERROR');
+END;
+/
+
+3. User defined errors, these are the erros which are declared by users to rise an error when an action is occured.
+Ans.
+DECLARE
+    val NUMBER := 5;
+    err EXCEPTION;
+BEGIN
+    IF val > 10 THEN
+    DBMS_OUTPUT.PUT_LINE(val);
+    ELSIF val < 6 THEN
+    RAISE err;
+    END IF;
+EXCEPTION
+    WHEN err THEN
+    DBMS_OUTPUT.PUT_LINE('The input value is under 6, please enter a value above 6.');
+END;
+/
+
+
 =========================================================
 11. Procedures without parameters.
+Ans.
+CREATE OR REPLACE PROCEDURE emp_info AS
+CURSOR all_emp IS SELECT * FROM Employee;
+TYPE tb_of_record IS TABLE OF Employee%ROWTYPE INDEX BY BINARY_INTEGER;
+emp_row tb_of_record;
+i NUMBER := 1;
+BEGIN
+    OPEN all_emp;
+    LOOP
+        FETCH all_emp
+        INTO emp_row(i).Emp_id, emp_row(i).Emp_name, emp_row(i).Dept_name, emp_row(i).Salary;
+        DBMS_OUTPUT.PUT_LINE(emp_row(i).Emp_id || ' | ' ||emp_row(i).Emp_name || ' | ' || emp_row(i).Dept_name || ' | ' || emp_row(i).Salary );
+        i := i+1;
+    EXIT WHEN all_emp%notfound OR i > 10;
+    END LOOP;
+    CLOSE all_emp;
+END;
+/
 
+EXEC emp_info;
 =========================================================
 12. Procedures with parameters.
+Ans.
+Example:
+CREATE OR REPLACE PROCEDURE del_emp(l_emp_id NUMBER) AS
+    err EXCEPTION;
+BEGIN
+    DELETE FROM Employee WHERE emp_id = l_emp_id;
+    IF SQL%FOUND THEN
+        DBMS_OUTPUT.PUT_LINE(l_emp_id || ' information deleted from database.');
+    ELSIF SQL%NOTFOUND THEN
+        RAISE err;
+    END IF;
+EXCEPTION
+    WHEN err THEN
+    DBMS_OUTPUT.PUT_LINE('no employee with employee id ' || l_emp_id);
+END;
+/
 
+EXEC del_emp(112);
 =========================================================
