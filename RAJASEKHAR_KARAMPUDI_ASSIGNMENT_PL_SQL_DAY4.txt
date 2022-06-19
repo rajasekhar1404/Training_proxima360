@@ -106,6 +106,14 @@ END;
 =========================================================
 3. SELECT INTO in pl/sql along with procedures and Exceptions.
 Ans.
+/*
+Below code will create a procedure for dept_emp_info with a parameter of dept name,
+and it will creat a cursor for selecting employees information of the given department name,
+Then in the execution block it will fetch all the employees info and stores it in the variables and prints the output,
+If the department name passed to the procedure is not found in the database, it will go to the exception block and prints the message.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE dept_emp_info(dept VARCHAR2) AS
     L_Emp_id employee.emp_id%TYPE;
     L_Emp_name employee.emp_name%TYPE;
@@ -129,9 +137,19 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Invalid department id');
 END;
 /
+
+BEGIN
+    dept_info('HR');
+END;
+
 =========================================================
 4. Conditional statements.
 Ans.
+/*
+Below code will check the available cities for the passed vacination type from parameters.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE vaccination_cities(type_of_vaccine VARCHAR2) AS
     Vaccine_1 CONSTANT VARCHAR2(30) := 'COVAXIN';
     Vaccine_2 CONSTANT VARCHAR2(30) := 'COVISHIELD';
@@ -162,9 +180,21 @@ BEGIN
     END IF;
 END;
 /
+
+EXEC vaccination_cities('COVAXIN');
+
 =========================================================
 5. Loops.
 Ans.
+/*
+Below code will create a procedure for showing the list of stores having the provided item from parameter.
+it will create a cursor with all the stores having that item using the given parameter.
+then it will fetch the stores numbers into the variables.
+and prints the message,
+if the given item is not there in any store, it will go to the exception block and prints the error message.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE item_in_stores(L_item NUMBER) AS
 
 CURSOR stores_list IS SELECT STORE FROM STORE WHERE ITEM = L_item;
@@ -184,9 +214,18 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Wrong item number, please check the item number and try again.');
 END;
 /
+
+EXECUTE item_in_stores(1001);
+
 =========================================================
 6. PL/SQL Record
 Ans.
+/*
+following scritp will create a procedure with a record type for listing out the employee information.
+and it will print the data in a table format.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE rec_ex AS
     TYPE L_interview IS RECORD(
         L_Candidate_id Interviews.candidate_id%TYPE,
@@ -210,9 +249,21 @@ BEGIN
                         ' Interview status: ' || Interview_info.L_INTERVIEW_STATUS);
 END;
 /
+
+BEGIN
+    rec_ex;
+END;
+
 =========================================================
 7. PL/SQL ROWTYPE
 Ans.
+/*
+Below example will take all the employee information from the employee id provided in parameter and stores it in a rowtype.
+and prints the infromation in a proper manner,
+if there is no such employee exists then it will send the error message.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE emp_info(L_Emp_id NUMBER) AS
     emp_details Employee%ROWTYPE;
     invalid EXCEPTION;
@@ -227,9 +278,19 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('invalid employee id.');
 END;
 /
+
+EXECUTE emp_info(113);
+
 =========================================================
 8. PL/SQL Tables
 Ans.
+/*
+Below example will create a procedure to list the candidates who are selected in the interviews,
+it will create a cursor with all the candidates who are selected,
+and then the data will be fetched into the vaiables.
+then it will print the message.
+*/
+Exampel:
 CREATE OR REPLACE PROCEDURE selected_list AS
 CURSOR selected_candidates IS SELECT Name FROM INTERVIEWS WHERE INTERVIEW_STATUS = 'Selected';
 TYPE tb_type IS TABLE OF interviews.name%TYPE INDEX BY BINARY_INTEGER;
@@ -248,10 +309,19 @@ BEGIN
 END;
 /
 
-exec selected_list;
+EXEC selected_list;
+
 =========================================================
 9. Cursors.
 Ans.
+/*
+Below code create a procedure to check all the departments where there are no manager id's,
+it will create a cursor and stores all the managers information,
+then it will fetch the info using the loop and print the messages.
+If any error occured while using the cursor it will execute the exception message.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE no_manager AS
 CURSOR dept_cur IS SELECT DEPARTMENT_ID, DEPARTMENT_NAME, LOCATION_ID FROM DEPARTMENTS WHERE MANAGER_ID IS NULL;
 L_dept_id NUMBER;
@@ -270,6 +340,9 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Please check the cursor.');
 END;
 /
+
+EXCE no_manager;
+
 =========================================================
 10. Types of Exceptions with examples.
 Ans.
@@ -281,7 +354,7 @@ We have 3 tpyes of exception.
 1. Predefined Exception are the Exceptions which are already declared by the oracle, we can directly access them by using the name of the error in the exception block,
 here are the examples for predefined exceptions.
 
-1. DUP_VAL_ON_INDEX
+i. DUP_VAL_ON_INDEX
 This exception will occur when duplicate values are trying to insert into a column which is having unique constraint.
 
 Example:
@@ -293,7 +366,7 @@ DBMS_OUTPUT.PUT_LINE('ALREADY EXISTS');
 END;
 /
 
-2. INVALID_CURSOR
+ii. INVALID_CURSOR
 This will occur when trying to perform cursor operation before opening.
 
 Example:
@@ -308,7 +381,7 @@ DBMS_OUTPUT.PUT_LINE('Please open the cursor to access the data and close after 
 END;
 /
 
-3. INVALID_NUMBER
+iii. INVALID_NUMBER
 This will occur when conversion of a character string into a number fails, because the string is not a valid number.
 
 Example:
@@ -323,7 +396,7 @@ DBMS_OUTPUT.PUT_LINE('ENTER A VALID NUMBER.');
 END;
 /
 
-4. VALUE_ERROR
+iv. VALUE_ERROR
 This will occure when arithmetic or conversion error occurs.
 
 Example:
@@ -338,7 +411,7 @@ DBMS_OUTPUT.PUT_LINE('ENTER A VALID NUMBER.');
 END;
 /
 
-5. TOO_MANY_ROWS
+v. TOO_MANY_ROWS
 It will return when a SELECT INTO statement returned more than one row.
 
 Example:
@@ -352,7 +425,7 @@ DBMS_OUTPUT.PUT_LINE('Your statement returning more then requested rows.');
 END;
 /
 
-6. ZERO_DIVIDE
+vi. ZERO_DIVIDE
 It will occur when trying to divide any value with 0.
 
 Example:
@@ -376,7 +449,6 @@ END;
 /
 
 3. User defined errors, these are the erros which are declared by users to rise an error when an action is occured.
-Ans.
 DECLARE
     val NUMBER := 5;
     err EXCEPTION;
@@ -392,10 +464,16 @@ EXCEPTION
 END;
 /
 
-
 =========================================================
 11. Procedures without parameters.
 Ans.
+/*
+Below example will create a procedure to list the top 10 employees from the database,
+it will create a cursor and stores the informtion of the all the employees,
+then in the loop it will fetch the top 10 employees information and prints the values.
+*/
+
+Example:
 CREATE OR REPLACE PROCEDURE emp_info AS
 CURSOR all_emp IS SELECT * FROM Employee;
 TYPE tb_of_record IS TABLE OF Employee%ROWTYPE INDEX BY BINARY_INTEGER;
@@ -415,9 +493,16 @@ END;
 /
 
 EXEC emp_info;
+
 =========================================================
 12. Procedures with parameters.
 Ans.
+/*
+Below example will create a procedure to delete the employee information from the database,
+it will take  a parameter of employee id and deletes the employee data,
+if there is no such employee exists, then the error message will pop up.
+*/
+
 Example:
 CREATE OR REPLACE PROCEDURE del_emp(l_emp_id NUMBER) AS
     err EXCEPTION;
@@ -435,4 +520,5 @@ END;
 /
 
 EXEC del_emp(112);
+
 =========================================================
