@@ -1,0 +1,158 @@
+=================================================
+1). What is the difference between functions and procedures?
+Ans.
+Function:
+A function will perform the actions specified in the execution block and it will return a value to the output.
+
+Procedure:
+A procedure will also performs all the actions mentioned in the execution block.
+
+Difference between Function and Procedure.
+1. A function must return a value to the calling environment and procedure
+don't need to return a value, it can print values using the dbms_output.put_line statement.
+
+2. Functions can be used in a select statement to perform actions on a table, Procedures can only executed in a Block or can be executed directly using EXEC or EXECUTE procedure_name(parameters);
+
+3. Functions will Compile the entire code everytime we run it, Procedures will only compile once while creating it and it will just run everytime we call it.
+
+4. A function can be called by a procedure, but a procedure can not be called from a function.
+
+=================================================
+2). Give the syntax for creating a function.
+Ans.
+Syntax for Function:
+CREATE OR REPLACE function_name(parameter datatype) RETURN datatype IS
+
+Example:
+/*
+The below function will accept one parameter,
+and it will return the 10 percent of that number,
+*/
+CREATE OR REPLACE FUNCTION sal_avg(sal NUMBER) RETURN NUMBER IS
+BEGIN
+    RETURN sal * 10/100;
+END;
+/
+
+/*
+Using the above sal_avg function in the Select statement.
+Below code will calculate the 10percent of employee salary and it will add that salary to the original salary and it will print all the information of that employee.
+*/
+
+DECLARE
+    emp_info Employee%ROWTYPE;
+BEGIN
+    SELECT Emp_id, Emp_name, Dept_name, Salary+sal_avg(Salary) AS Final_sal 
+    INTO emp_info.Emp_id, emp_info.Emp_name, emp_info.Dept_name, emp_info.salary
+    FROM Employee WHERE Emp_id = 101;
+    DBMS_OUTPUT.PUT_LINE('Employee id: ' || emp_info.Emp_id || CHR(10) ||
+                        'Employee name: ' ||emp_info.Emp_name || CHR(10) ||
+                        'Department name: ' || emp_info.Dept_name || CHR(10) ||
+                        'Final salary: ' || emp_info.salary);
+END;
+/
+
+=================================================
+3). Delete a function from the DB - Syntax?
+Ans.
+Syntax for deleting a Function:
+DROP FUNCTION function_name;
+
+Example for dropping a Function:
+DROP FUNCTION sal_avg;
+
+=================================================
+4). Explain different parameter modes in function.
+Ans.
+There are 3 types of parameters in functions.
+
+1. IN
+	It is used to give the input value to the subprogram, 
+	it can only send the values to the subprogram, 
+	IN is the defalut parameter, even if we don't specify a parameter mode it will take it as IN.
+
+2. OUT
+	It is used to return the values from the subprogram to executing environment,
+	It can not send the input values,
+	It can store the values in it from subprogram and we can use them in the executing environment.
+
+3. IN OUT
+	It is a combination of IN and OUT parameter type,
+	It can send the input values and take the return values from the subprogram, then we can use them in the executing environment.
+	
+=================================================
+5). Explain the concept of overloading in packages.
+Ans.
+Overloading will occure when we try to create a procedure or function with the same name and same number of parameters with same datatypes,
+In order to overcome this we can provide the different types of datatypes, or we can give the different number of datatypes or we can use different names for procedures or packages,
+
+When we have a procedure or a package with the same name and different parameters and trying to execute it,
+it choose the function or procedure based on the number of parameters or type of datatypes.
+
+We can have a procedure or function name same as out side the package, it will consider both as different.
+
+Here is an example for overloading:
+/*
+Below script will create a package as hr_data with 3 procedures,
+Each procedure is having same name as Emp_data,
+But each procedure is having different number of parameters.
+*/
+
+--Package specification
+CREATE OR REPLACE PACKAGE hr_data AS
+PROCEDURE Emp_data(p_emp_id NUMBER);
+PROCEDURE Emp_data(p_emp_id NUMBER, p_emp_name VARCHAR2);
+PROCEDURE Emp_data(p_emp_id NUMBER, p_emp_name VARCHAR2, p_dept_name VARCHAR2);
+END;
+/
+
+--Package body
+CREATE OR REPLACE PACKAGE BODY hr_data AS
+    PROCEDURE Emp_data(p_emp_id NUMBER) AS
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('employee_data_1');
+        END;
+    PROCEDURE Emp_data(p_emp_id NUMBER, p_emp_name VARCHAR2) AS
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('employee_data_2');
+        END;
+    PROCEDURE Emp_data(p_emp_id NUMBER, p_emp_name VARCHAR2, p_dept_name VARCHAR2) AS
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('employee_data_3');      
+        END;
+END;
+
+/*
+When i execute the hr_data.Emp_data(101); it will go to the package hr_data and look for the procedure Emp_data with only 1 parameter of number it and it will execute that procedure and we'll get the output as employee_data_1.
+*/
+
+EXEC hr_data.Emp_data(101);
+
+/*
+Below execution will look for the procedure in hr_data package which is having 2 parameters 1st on as number and 2nd one as varchar, then it will print the message as employee_data_2.
+*/
+
+EXEC hr_data.Emp_data(101, 'Raja');
+
+/*
+Below execution will look for the procedure which is having 3 parameters in hr_data package and it will print the message as employee_data_3.
+*/
+
+EXEC hr_data.Emp_data(101, 'Raja', 'Admin');
+
+=================================================
+6). List out and explain the components of a package.
+
+=================================================
+7). Define a package specification with a function display_value and a procedure get_input
+
+=================================================
+8). Define a package body for the above-created package spec by defining the display_value function.
+
+=================================================
+9). Create a calculator function that can only perform basic mathematical operations with a maximum of 5 parameters.
+
+=================================================
+10). Call the calculator function by passing values 2 and 10 to perform a modular operation(should return the reminder).
+
+=================================================
