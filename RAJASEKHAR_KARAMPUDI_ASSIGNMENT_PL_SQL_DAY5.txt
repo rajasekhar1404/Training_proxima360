@@ -142,17 +142,114 @@ EXEC hr_data.Emp_data(101, 'Raja', 'Admin');
 
 =================================================
 6). List out and explain the components of a package.
+Ans.
+We have 2 components in package
+1. Specification.
+2. Body.
+
+1. Specification:
+	Specification will have all the declared variables, datatypes, constants, cursors.
+2. Body:
+	Body is the full defination of a specification, body will containt the complete code of how that procedure or function will work.
+	Each specification should have a body to use it.
+
+Here is an example for specification and Body:
+
+--Specification.
+CREATE OR REPLACE PACKAGE pack1 AS
+PROCEDURE procedure1(num1 NUMBER, num2 NUMBER);
+END;
+
+--Body
+CREATE OR REPLACE PACKAGE BODY pack1 AS
+PROCEDURE procedure1(num1 NUMBER, num2 NUMBER) AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(num1 + num2);
+    END;
+END;
+/
 
 =================================================
 7). Define a package specification with a function display_value and a procedure get_input
+Ans.
+/*
+Here is the example for specification of a package.
+Below specification will create a Procedure of display_value,
+And a Function as get_input with 1 parameter.
+*/
+
+CREATE OR REPLACE PACKAGE first_pack AS
+PROCEDURE display_value;
+FUNCTION get_input(num1 NUMBER) RETURN NUMBER;
+END;
+/
 
 =================================================
 8). Define a package body for the above-created package spec by defining the display_value function.
+Ans.
+/*
+Here is the defination of package body of first_pack package.
+Below code will return the value RAJASEKHAR when display_value procedure is executed.
+And The function will return a number.
+*/
+
+CREATE OR REPLACE PACKAGE BODY first_pack AS
+PROCEDURE display_value AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('RAJASEKHAR');
+    END;
+FUNCTION get_input(num1 NUMBER) RETURN NUMBER AS
+    BEGIN
+        RETURN 19235;
+    END;
+END;
+/
 
 =================================================
 9). Create a calculator function that can only perform basic mathematical operations with a maximum of 5 parameters.
+Ans.
+/*
+Here is the example for creating the function for calculator that will have 3 input parameters,
+First 2 parameters will take the numbers and last parameter will take a operator either +, -, /, *.
+Then it will perform the respective operation on 2 numbers and return the result of it.
+*/
+
+CREATE OR REPLACE FUNCTION calculator(num1 NUMBER, num2 NUMBER, action VARCHAR2) RETURN NUMBER AS
+    l_result NUMBER;
+BEGIN
+    IF action = '+' THEN 
+    RETURN num1 + num2;
+    ELSIF action = '*' THEN
+    RETURN num1 * num2;
+    ELSIF action = '/' THEN
+    RETURN num1 / num2;
+    ELSIF action = '-' THEN
+    RETURN num1 - num2;
+    ELSIF action = '%' THEN
+    RETURN mod(num1, num2);
+    ELSE
+    RETURN 'Please enter first 2 values as numbers and last value as an operator.';
+    END IF;
+END;
+/
+
+SELECT calculator(1, 2, '+') FROM DUAL;
 
 =================================================
 10). Call the calculator function by passing values 2 and 10 to perform a modular operation(should return the reminder).
+Ans.
+/*
+Below anonymous block will perform the modulus of two values and print the result using the CALCULATOR function.
+*/
+
+DECLARE
+    val1 NUMBER := 2;
+    val2 NUMBER := 10;
+    v_result NUMBER;
+BEGIN
+    v_result := CALCULATOR(val1, val2, '%');
+    DBMS_OUTPUT.PUT_LINE(v_result);
+END;
+/
 
 =================================================
