@@ -1,0 +1,132 @@
+============================================================
+1. Write a SQL statement using sub-query to obtain buyer name from buyer table and division table where the buyer is 1000
+Ans.
+--Subquery to Select the buyer_name from Buyer whose buyer is 1000 in division table.
+SELECT Buyer_Name, Buyer FROM Buyer WHERE Buyer = (SELECT Buyer FROM Division WHERE Buyer = 1000);
+
+============================================================
+2. Give the output for the following query:
+    select division, min(total_market_amt) from division group by division having max(total_market_amt) > (select avg(total_market_amt) from division);
+
+--Ouput for above QUERY is.
+DIVISION | MIN(TOTAL_MARKET_AMT)
+--------------------------------
+600      | 247000000
+
+Explanation:
+    The purpose of this query is to get the division and the min(total_market_amt) from division table 
+    when the highest total_market_amt of that division is greater than the average total_market_amt of all the divisions.
+    The subquery will execute first and it will return the average of all the divisions total_market_amt.
+    Then the outer query will group all the divisions and compares the max total_market_amt of each division is greater than the result recieved from the inner query.
+    If it finds a match it will return the division and min total_market_amt of that division.
+
+============================================================
+3. Explain the difference between <ANY & <ALL operators with an example query.
+Ans.
+<ANY and <ALL are used to check the conditions while using subqueries,
+By usging <ANY operator the value coming from outer query will be compared with all the values retrived in the inner query,
+and if it finds any one of those values are lesser than the outer query value then the condition will satisfy and the corrosponding statement will gives the result.
+
+Example: 
+/*
+The following query will returns the employee details if any employee's salary is less than the average salary of any one of the department.
+*/
+SELECT * FROM employee WHERE salary <ANY (SELECT AVG(SALARY) FROM employee GROUP BY dept_name);
+
+By using <ALL operator the outer query values will be compared with all the values in retrived from the inner query,
+and it will check if the outer query value is less the every single value retrived in the inner query, 
+if the condition satisfy it will return the corrosponding statement.
+
+Example:
+/*
+The following query will return the employee details if any of the employee's salary is less than average salary of all the departments.
+*/
+SELECT * FROM Employee WHERE Salary <ALL (SELECT AVG(Salary) FROM Employee GROUP BY dept_name);
+
+============================================================
+4. What is the collection of DML statements that form a logical unit of work called?
+Ans.
+It is called as Transaction, it is a sequence of operations performed using one or more SQL statements 
+on a database as a single logical unit of work.
+The effects of all the SQL statements in a transaction can be either all committed or all rolled back.
+
+============================================================
+5. Find the errors in the following DML and give the correct query:
+INSERT into buyer(buyer, buyer_name, buyer_phone, buyer_fax) VALUES(‘1800’, Darren Jensen, '6123958800');
+Ans.
+The first  error we will see after running the above query is "invalid character"
+Because the 2nd value Darren Jensen is a VARCHAR data type it should be enclosed in a single or double quotations.
+If we add the Quotations before and after Darren Jensen and run the query,
+we will get another error as "not enough values"
+Because INSERT query is giving 4 column names and the values provided to it are only 3
+So the last column buyer_fax is not allocated with any value, so it  will gonna throw an error as "not enough values".
+
+The correct query will be as follow:
+INSERT INTO buyer(buyer, buyer_name, buyer_phone, buyer_fax) VALUES(1800, 'Darren Jensen', 6123958800, NULL);
+/* Either we can provide null value for buyer_fax in the values, 
+or we can remove buyer_fax from the columns list, anyway it will set to null,
+the quotations around buyer and buyer_phone are not necessary because it is a NUMBER datatype. */
+
+============================================================
+6. Give example queries for implicit and explicit NULL insertion into tables.
+Ans.
+We can insert values into a table in two ways.
+    1. Directly provoiding the VALUES for all the columns, in this case to insert NULL values in the column we have to specify the keyword NULL,
+    Which is known as Explicit NULL insertion.
+    EX:
+        INSERT INTO buyer VALUES(1800, 'Darren Jensen', 6123958800, NULL); --in this case i'm inserting explicitly NULL value into 4th column.
+
+    2. Inserting data into specific columns, in this case we will insert values into only required columns by mentioning them in the INSERT INTO statement.
+    So the other columns which are not mentioned will be Implicitly take null values in it.
+    EX:
+        INSERT INTO buyer(buyer, buyer_name) VALUES(1800, 'Darren Jensen'); --There are two more columns which are not mentioned in the query, they will take null values.
+
+============================================================
+7. Create a table similar to the merch table and insert records into the new table by copying data from the merch table where merch is 1000.
+Ans.
+--Inserting data into Merch_new table from Merch table where merch = 1000.
+INSERT INTO MERCH_new SELECT * FROM MERCH WHERE Merch = 1000;
+
+============================================================
+8. Replace merch column value to 500 in merch table where merch is 1000.
+Ans.
+--Updating merch value to 500 where merch value is 1000.
+UPDATE MERCH SET Merch = 500 WHERE MERCH = 1000;
+
+============================================================
+9. Replace merch column value to 1000 in merch table where merch is 500 but now using a subquery.
+Ans.
+--Updating the merch value in merch table by fetching the data using subquery from merch table where merch = 500
+UPDATE MERCH SET Merch = 1000 WHERE Merch = (SELECT Merch FROM Merch WHERE MERCH = 500);
+
+============================================================
+10. Why do we get integrity constraint errors?
+Ans.
+Integrity constraint errors occurs when an INSERT, UPDATE, DELETE statements voilates a PRIMARY KEY, FOREIGN KEY, CHECK or UNIQUE constraints.
+
+"Attempt to insert duplicate key row in object object_name with unique index index_name."
+It occurs when trying to insert a duplicate row into a table that has a unique constraint.
+
+"Check constraint violation occurred, table name = table_name, constraint name = constraint_name."
+Occurs when an update or delete would violate a check constraint on a column.
+
+============================================================
+11. Delete records in the salary table where the employee id is greater than 4.
+Ans.
+--Deleting the records from salary table by checking the employee id in emp table when it is greater than 4.
+DELETE FROM Salary WHERE emp_id IN (SELECT emp_id FROM emp WHERE emp_id > 4);
+
+============================================================
+12. What is the use of a Commit statement?
+Ans.
+We will use the COMMIT Statement to make all the current transactions permanent, 
+once the commit statement is executed all the changes made from the last commit will be saved in the database.
+
+============================================================
+13. Is it possible to rollback on a DDL statement? Explain.
+Ans.
+NO, DDL statements are not possible to ROLLBACK,
+When we run a DDL in Oracle Database, it issues two implicit commit, 
+One before the statement and one after successful completion.
+
+============================================================

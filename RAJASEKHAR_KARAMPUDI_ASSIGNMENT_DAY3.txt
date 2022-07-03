@@ -1,0 +1,250 @@
+============================================================
+1.Create an employee table with employee no, employee name, emp join date, emp designation, salary, address, pin code
+Ans.
+--Employee Table Creation
+CREATE TABLE Employee(Employee_No NUMBER PRIMARY KEY, Employee_Name VARCHAR2(30) NOT NULL, Emp_Join_Date DATE, Emp_Designation VARCHAR2(20), Salary NUMBER, Address VARCHAR2(50), Pincode NUMBER(6));
+
+============================================================
+2.Write a select statement on the employee table (column employee name and designation) with LOWER, UPPER and INITCAP functions in a single statement.
+Ans.
+--Function To get Employee_Name and Designation in LOWER case, UPPER case, INITCAP
+SELECT 
+LOWER(Employee_Name), LOWER(Emp_Designation),
+UPPER(Employee_Name), UPPER(Emp_Designation),
+INITCAP(Employee_Name), INITCAP(Emp_Designation)
+FROM Employee;
+
+============================================================
+3.Write a select statement on the employee table and concatenate employee name and emp no.
+Ans.
+--Concatenating Employee_Name and Employee_No
+SELECT CONCAT(Employee_Name, Employee_No) FROM Employee;
+
+============================================================
+4.Write a select statement on employee table and get the last 3 characters of emp name
+Ans.
+--Getting last 3 characters from Employee_Name
+SELECT SUBSTR(Employee_Name, -3, 3) FROM Employee;
+
+--Or we can get last three charactors by including the LENGTH Function in SUBSTR Function also
+SELECT SUBSTR(Employee_Name, LENGTH(Employee_Name)-2, 3) FROM Employee;
+
+--Or we can also use reverse String Function
+SELECT REVERSE(SUBSTR(REVERSE(Employee_Name), 0, 3)) FROM Employee;
+
+============================================================
+5.Write a select statement on employee table and get the number of characters in emp designation
+Ans.
+--Finding the Number of characters in Emp_Designation
+SELECT LENGTH(Emp_Designation) FROM Employee;
+
+============================================================
+6.Write a select statement on employee table (column employee name) and add a $ on left and # on right. The total length of the output is 25.
+Ans.
+--Adding $ and # symbols to Employee name
+/*In this case i was Concatenating $ at the beginning 
+and Right Padding to 23 and Concatenating # at the end
+So the final output will be having 23 characters of Employee name and 2 symbols that we have added,
+the final output will be having a length of 25 characters.
+*/
+SELECT CONCAT(CONCAT('$', RPAD(Employee_Name, 23)), '#') FROM Employee; 
+
+--Same operation with Pipe
+SELECT '$'||RPAD(Employee_Name, 23)||'#' FROM Employee;
+
+============================================================
+7.Write a select statement on employee table (column employee name) and find the second last occurrence of character 'a'.
+Ans.
+--Finding the second last occurrence of 'a' character in Employee_Name
+SELECT INSTR(Employee_Name, 'a', -1, 2) FROM Employee;
+
+============================================================
+8.Write a select statement on the employee table (column employee name) and find the first occurrence of character 'a' after the 3 positions in employee name (Sandhiya, it should give me the occurrence of 'a' after 'n').
+Ans.
+--Finding first charactor 'a' in Employee_Name after 3 characters.
+SELECT Employee_Name, INSTR(Employee_Name, 'a', 3, 1) FROM Employee;
+
+============================================================
+9.Write a select statement on the employee table whose salary should be rounded to 2 decimal places.
+Ans.
+--Rounding the salary to two decimal places.
+SELECT ROUND(Salary, 2) FROM Employee;
+
+============================================================
+10.Write a select statement on the employee table whose salary should be truncated to 3 decimal places.
+Ans.
+--truncating the salary to two decimal places.
+SELECT TRUNC(Salary, 3) FROM Employee;
+
+============================================================
+11.Write a select statement on employee table using decode, if pin code is 'pincode1' its 'Bangalore if pin code is 'pincode2' then Hyderabad else 'India'
+Ans.
+--DECODE function to check the pincode is from Bangalore or Hyderabad, if both are false setting it to India
+SELECT DECODE(Pincode, 500070, 'Bangalore', 500020, 'Hyderabad', 'India') FROM Employee;
+
+============================================================
+12.Write queries using LOWER, UPPER and INITCAP function in where clause.
+Ans.
+SELECT * FROM Employee WHERE LOWER(Employee_Name) = 'rajasekhar'; --Using LOWER Function
+
+SELECT * FROM Employee WHERE UPPER(Employee_Name) = 'RAJASEKHAR'; --Using UPPER Function
+
+SELECT * FROM Employee WHERE INITCAP(Employee_Name) = 'Shiva Prasad'; -- Using INITCAP Function
+
+============================================================
+13.Write the syntax of SUBSTR, INSTR, LENGTH, LPAD, RPAD with its implementation in select and where clause.
+Ans.
+--Using Charactor Functions in WHERE Clause
+--SUBSTR
+SELECT SUBSTR(Employee_NO, -2, 2) FROM Employee WHERE SUBSTR(Employee_Name, 0, 3) = 'Raj';
+
+--INSTR
+SELECT INSTR(Emp_Designation, 'Q')  FROM Employee WHERE INSTR(Employee_Name, 'n') = 4;
+
+--LENGTH
+SELECT LENGTH(Salary) FROM Employee WHERE LENGTH(Employee_Name) = 10;
+
+--LPAD
+SELECT LPAD(Emp_Join_Date, 2) FROM Employee WHERE LPAD(Salary, 5) = 50000;
+
+--RPAD
+SELECT RPAD(Pincode, 2) FROM Employee WHERE RPAD(Salary, 4) = 4000;
+
+============================================================
+14.Write complex queries using different types of number functions.
+Ans.
+--Using Number functions
+--ROUND
+/*
+This QUERY will Update the Salary to 40000 of Employees Who are working from more than an year as a PL/SQL Developer and getting salary between 35000 and 40000.
+*/
+SELECT ROUND(Salary, -4) FROM Employee WHERE Salary BETWEEN 35000 AND 40000 AND Emp_Join_Date < SYSDATE-365 AND Emp_Designation = 'PL/SQL Developer';
+
+--TRUNC
+/*
+Following QUERY will get the 10 percent of salary how are living in Hyderabad and it will trunc to thousands and the trunc amount will be added to total salary.
+*/
+SELECT Salary + TRUNC(Salary/10, 3) FROM Employee WHERE Pincode IN(500060, 500038, 500022);
+
+--MOD
+/* It will return all the Employees Who are having EVEN CustomerID */
+SELECT * FROM Employee WHERE MOD(Employee_No, 2) = 0;
+
+============================================================
+15.Write queries using different types of date functions.
+Ans.
+--Examples For Date Functions
+--MONTHS_BETWEEN (It will calculate the months between given two dates)
+SELECT MONTHS_BETWEEN(SYSDATE, Emp_Join_Date) FROM Employee;
+
+--ADD_MONTHS (It will add the number of months which are given in 2nd argument to the date given in first argument)
+SELECT ADD_MONTHS(Emp_Join_Date, 24) FROM Employee;
+
+--NEXT_DAY (It will find the Next Monday for the date given in the first argument)
+SELECT NEXT_DAY(SYSDATE, 'MONDAY') FROM DUAL;
+
+--LAST_DAY (It will find the Last day of the month given in the argument)
+SELECT LAST_DAY(SYSDATE) FROM DUAL;
+
+--ROUND (It will rounds the date or month or year to the next day or month or year if the values is equal or more than half, if not it will keep the value as it is.)
+SELECT ROUND(SYSDATE) FROM DUAL;
+SELECT ROUND(SYSDATE, 'MM') FROM DUAL;
+SELECT ROUND(SYSDATE, 'YYYY') FROM DUAL;
+SELECT ROUND(TO_DATE('20-10-2022', 'DD-MM-YYYY'), 'YYYY') FROM DUAL;
+
+--TRUNC (It will trunc the value to lower value even if the value is greater than half)
+SELECT TRUNC(SYSDATE) FROM DUAL;
+SELECT TRUNC(SYSDATE, 'MM') FROM DUAL;
+SELECT TRUNC(SYSDATE, 'YYYY') FROM DUAL;
+SELECT TRUNC(TO_DATE('20-10-2022', 'DD-MM-YYYY'), 'YYYY') FROM DUAL;
+
+============================================================
+16.Write queries using different types of conversion functions.
+Ans.
+--TO_CHAR (It will Extract the first 2 characters of Emp_Designation and it will converts the Employee_No to Text format and the extracted part will be added to the Employee_No
+SELECT CONCAT(TO_CHAR(Employee_No), SUBSTR(Emp_Designation, 0, 2)) FROM Employee;
+
+--TO_NUMBER (It will get the last 3 digits from the ID and updates it to 20 then the updated values will be added to the ID)
+SELECT CONCAT(SUBSTR('17QT5A0109', 0, 7),TO_NUMBER(SUBSTR('17QT5A0109', -3,3))+20) FROM DUAL;
+
+--TO_DATE (It will converts the given input into a valid date)
+SELECT TO_DATE('JAN-05-2022', 'MM-DD-YYYY') FROM DUAL;
+
+============================================================
+17.Write the syntax of DECODE with its implementation in complex queries.
+Ans.
+--DECODE Example
+/*
+It will return the value Sr. Software Engineer if the Employee_No is 1000, TL if the Employee_No is 1005 and for all other Data analyst.
+*/
+SELECT DECODE(Employee_No, 1000, 'Sr. Software Engineer', 1005, 'TL', 'Data Analyst') FROM Employee;
+
+============================================================
+18.Write the syntax of NVL with its implementation in select and where clause.
+Ans.
+--NVL Example in SELECT and WHERE Clause
+SELECT NVL(Salary, 10000) FROM Employee WHERE Employee_Name IS NOT NULL;
+
+============================================================
+19.Please go through the questions asked during the session and also revise the old modules.
+
+1. Difference between VDATE and SYSDATE.
+Ans.
+SYSDATE: It will give the System date of the server.
+VDATE: It will give the system date of the session.
+Ex: If the server is in UK, The SYSDATE will be the UK time and the VDATE will be the Indian time.
+
+2. Concating multiple multiple Columns with CONCAT Function
+Ans.
+SELECT CONCAT(CONCAT(CONCAT(Employee_No, Employee_Name), Emp_Designation), Salary) FROM Employee;
+
+3. Performing ROUND operations on date to remove floating points.
+Ans.
+SELECT ROUND(MONTHS_BETWEEN(SYSDATE, SYSDATE-600)) FROM DUAL;
+
+============================================================
+CASE and DECODE Functions and Examples.
+CASE: It is like a more flexible version of DECODE Function, the value of the CASE expression will compares the Value with different list of comparision expressions we provide,
+once it found a match the associated value is returned.
+at the end of the CASE expression we will provide a ELSE value to return when non of the comparision are matched,
+we can create an alias for the CASE expression so that it will appear as the column name.
+
+--Example1:
+
+SELECT Employee_Name, Emp_Join_Date, Salary,
+(CASE Employee_No
+WHEN 1000 THEN 'PL/SQL Developer'
+WHEN 1001 THEN 'SQL Developer'
+WHEN 1002 THEN 'Java Developer'
+ELSE 'System Analyst'
+END) AS Designation
+FROM Employee;
+
+--Example2:
+
+SELECT Employee_Name, Emp_Join_Date, Salary, Address,
+(CASE
+WHEN Pincode LIKE '%60' THEN 'Hyderabad'
+WHEN Pincode LIKE '%38' THEN 'Bangalore'
+WHEN Pincode LIKE '%22' THEN 'Chennai'
+ELSE 'Not found the address'
+END) AS E_Add
+FROM Employee;
+
+--DECODE:
+/*
+It will allows us to check IF-THEN-ELSE logic in the QUERY, If the expression is equal to the search then the corrosponding result is returned,
+if not then the defalut value will return.
+*/
+
+--Example:
+/*
+The following Query will return if the day is SATURDAY then weekend first day, 
+if the day is sunday weekend second day 
+else working day
+I found that the day returned in TO_CHAR Function is having length of 9 for all the day's with blank space,
+So i added spaces in SATURDAY and SUNDAY.
+*/
+SELECT DECODE(TO_CHAR(TO_DATE('12-JUN-2022', 'DD-MM-YYYY'), 'DAY'), 'SATURDAY ', 'Weekend first day', 'SUNDAY   ', 'Weekend second day', 'Working day') FROM DUAL;
+
+============================================================

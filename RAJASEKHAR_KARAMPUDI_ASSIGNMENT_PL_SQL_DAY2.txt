@@ -1,0 +1,277 @@
+============================================================
+1. Practice DML & Select statements in PL/SQL block.
+Ans.
+--Example for INSERT in pl/sql.
+/*
+The below code will get the highest employee id and it will increase by 1,
+then the declared variables will be added to the employee table.
+*/
+DECLARE
+    L_Emp_id Employee.Emp_ID%TYPE;
+    L_Emp_name VARCHAR2(30) := 'Vamshi';
+    L_Dept_name VARCHAR2(30) := 'Admin';
+    L_Salary NUMBER := 8599;
+BEGIN
+    SELECT MAX(Emp_id) INTO L_Emp_id FROM Employee;
+    L_Emp_id := L_Emp_id + 1;
+    
+    INSERT INTO Employee VALUES(L_Emp_id, L_Emp_name, L_Dept_name, L_Salary);
+    DBMS_OUTPUT.PUT_LINE(L_Emp_name || ' data added to the database.');
+END;
+/
+
+--Example for UPDATE in pl/sql.
+/*
+Below script will get the employee department name entered by user,
+and it will add 500 to all the employees working under that depratment.
+*/
+DECLARE
+    L_Dept_name employee.dept_name%TYPE := :val;
+BEGIN
+    UPDATE Employee SET Salary = Salary + 500 WHERE Dept_name = l_dept_name;
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' Rows updated.');
+END;
+/
+
+--Example for DELETE in pl/sql.
+/*
+below code will deletes the employee information from employee table based on the declared variables.
+*/
+DECLARE
+    L_Emp_name Employee.Emp_name%TYPE := 'Rajasekhar';
+BEGIN
+    DELETE FROM Employee WHERE Emp_name = L_Emp_name;
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' Rows updated.');
+END;
+/
+
+============================================================
+2. Give examples for IF, IF-ELSE, IF-ELSIF statements and also explain its usages.
+Ans.
+--IF Example
+/*
+If Is used to run the statmeents only when the specified condition is true.
+
+Below code will get the department name of the given dept_id,
+if that department is belongs to HR then only the code which is under the if block will execute.
+*/
+DECLARE
+    L_Emp_ID Employee.Emp_ID%TYPE;
+    L_Emp_Dept Employee.Dept_Name%TYPE;
+BEGIN
+    L_Emp_ID := 105;
+        SELECT Dept_Name INTO L_Emp_Dept FROM Employee WHERE Emp_ID = L_Emp_ID;
+    
+    IF L_Emp_Dept = 'HR' THEN
+        UPDATE Employee SET Salary = Salary+500 WHERE Emp_ID = L_Emp_ID;
+        DBMS_OUTPUT.PUT_LINE(L_Emp_ID || ' Salary updated.');
+    END IF;
+END;
+/
+
+--IF-ELSE Example
+/*
+IF ELSE is used to check if a condition is true or not, 
+if it is true then the statements which will execute,
+if not then it will go to ELSE block and runs the statements which are in ELSE BLock.
+*/
+DECLARE
+    L_Job_title VARCHAR2(30);
+    L_min_salary jobs.min_salary%TYPE;
+BEGIN
+    L_Job_title := :title;
+    
+    IF L_Job_title = 'Accountant' THEN
+        DBMS_OUTPUT.PUT_LINE(L_Job_Title || ' openings available.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('No jobs available for this role');
+    END IF;
+END;
+/
+
+--IF-ELSIF-ELSE
+/*
+It is used to check multiple conditions when the above conditions are not satisfied,
+if any of the elsif condition becomes true, it will execute the code in that block,
+if not then the focus will move to else part and runs the statements in it.
+*/
+DECLARE
+    L_Emp_ID Employee.Emp_ID%TYPE;
+    L_Emp_Dept Employee.Dept_name%TYPE;
+BEGIN
+    L_Emp_ID := 111;
+        SELECT Dept_name INTO L_Emp_Dept FROM Employee WHERE Emp_ID = L_Emp_ID;
+    
+    IF L_Emp_Dept = 'Admin' THEN
+        DBMS_OUTPUT.PUT_LINE('Employee working in Admin department');
+    ELSIF L_Emp_Dept = 'HR' THEN
+        DBMS_OUTPUT.PUT_LINE('Employee working under HR department');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Employee data not found');
+    END IF;
+    
+END;
+/
+
+============================================================
+3. What are different types of Loops? Write their syntax.
+Ans.
+We have 3 types of loops in pl/sql.
+1. Basic loop:
+Syntax:
+    LOOP condition statements EXIT WHEN condition END LOOP;
+--Basic loop example.
+DECLARE
+    L_emp_name Employee.emp_name%TYPE;
+    L_emp_id Employee.Emp_id%TYPE := 102;
+BEGIN
+    LOOP
+        L_emp_id := L_emp_id+1;
+        SELECT Emp_name INTO L_Emp_name FROM Employee WHERE Emp_id = L_emp_id;
+        DBMS_OUTPUT.PUT_LINE('Name of the employee ' ||L_Emp_name||' and employee id is '||L_Emp_id);
+        EXIT WHEN L_emp_id = 105;
+    END LOOP;
+END;
+
+2. FOR loop:
+Syntax:
+    FOR operator IN range LOOP statements END LOOP;
+--For loop example
+DECLARE
+    S_no NUMBER;
+BEGIN
+    S_no := 10;
+    FOR i IN 10.. 15 LOOP
+        DBMS_OUTPUT.PUT_LINE(i);
+    END LOOP;
+END;
+/
+
+3. While loop.
+Syntax:
+
+WHILE condition LOOP statements END LOOP;
+
+Example:
+DECLARE
+    Score NUMBER := 5;
+BEGIN
+    WHILE Score < 25 LOOP
+        DBMS_OUTPUT.PUT_LINE('Score is ' || Score);
+        Score := Score + 5;
+    END LOOP;
+END;
+/
+
+============================================================
+4. Give examples of nested IF statements.
+Ans.
+--Example for nested IF statements.
+DECLARE
+    val_1 NUMBER;
+    val_2 NUMBER;
+BEGIN
+    val_1 := 10;
+    val_2 := 15;
+    IF val_1 > 5 THEN
+        IF val_2 < 20 THEN
+            DBMS_OUTPUT.PUT_LINE(val_1 + val_2);
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('val_2 greater than 20');
+        END IF;
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('val_1 is lesser than 5.');
+    END IF;
+END;
+/
+
+============================================================
+5. What is a nested loop? Give examples.
+Ans.
+Nested loop:
+    It is a loop which is declared inside another loop, 
+    when the outer loop satisfies the condition, it will run all the statements in it and it will move to the nested loop,
+    it will run till the inner loops reaches it's limit, then the focus will move to the outer loop,
+    for every iteration of outer loop, inner loop will run.
+
+Here is an example for nested loop.
+DECLARE
+    val_1 NUMBER;
+    val_2 NUMBER;
+BEGIN
+    val_1 := 5;
+    val_2 := 20;
+    LOOP
+        DBMS_OUTPUT.PUT_LINE('val_1 is ' || val_1);
+        val_1 := val_1 + 5;
+        EXIT WHEN val_1 >= 20;
+        LOOP
+            DBMS_OUTPUT.PUT_LINE('val_2 is '|| val_2);
+            val_2 := val_2 - 5;
+            EXIT WHEN val_2 <= 0;
+        END LOOP;
+    END LOOP;
+END;
+/
+
+============================================================
+6. Explain logical conditions in PL/SQL.
+Ans.
+The conditions which will return BOOLEAN values TRUE or FALSE or NULL are known as logical conditions.
+
+Here are the examples.
+--USING and operator.
+DECLARE
+    a BOOLEAN := TRUE;
+    b BOOLEAN := FALSE;
+BEGIN
+    IF a and b THEN
+        DBMS_OUTPUT.PUT_LINE('a and values are true.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('condition not satisfied');
+    END IF;
+END;
+/
+
+--USING or operator.
+DECLARE
+    a BOOLEAN := TRUE;
+    b BOOLEAN := FALSE;
+BEGIN
+    IF a or b THEN
+        DBMS_OUTPUT.PUT_LINE('one of a and b is true.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('condition not satisfied');
+    END IF;
+END;
+/
+
+--USING not operator.
+DECLARE
+    a BOOLEAN := TRUE;
+    b BOOLEAN := FALSE;
+BEGIN
+    IF not(a and b) THEN
+        DBMS_OUTPUT.PUT_LINE('a and b values are returning false.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('condition not satisfied');
+    END IF;
+END;
+/
+
+============================================================
+7. Please go through the different conditions/rules for LOOPs and IF statements.
+Ans.
+Important guidelines to remember while using IF statements.
+1. Every IF block should end with a END IF;
+2. When there are multiple ELSIF conditions, only the first condition which is becoming true will execute.
+3. IF conditions can only run when a boolean value is returned.
+4. Only one else statement can be used for a IF condition.
+
+GUidelines to remember while using loops.
+1. Every loop should end with a END LOOP; keyword.
+2. There must be a EXIT clause, otherwise infinte loop will occure.
+3. we can have unlimited nested loops in a loop.
+4. loop will come out only when the condition is not satisfied.
+
+============================================================

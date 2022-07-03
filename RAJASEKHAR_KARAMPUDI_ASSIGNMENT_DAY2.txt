@@ -1,0 +1,122 @@
+============================================================
+1. Create an employee table with employee no, employee name, emp join date, emp designation, salary, address, pin code
+Ans.
+--Creating Employee Table
+CREATE TABLE Employee (Employee_no NUMBER(10) PRIMARY KEY, Employee_Name VARCHAR2(50) NOT NULL, Emp_join_date DATE, Emp_designation VARCHAR2(30), Salary NUMBER(10), Address VARCHAR2(200), Pincode NUMBER(6));
+
+============================================================
+2. Write a select statement on employee table whose employee no is 1001
+Ans.
+--SELECT Statement for showing the data of Employee having Employee_No 1001
+SELECT * FROM Employee WHERE Employee_NO = 1001;
+
+============================================================
+3. Write a select statement on employee table whose employee name is Akhil
+Ans.
+--SELECT Statement for showing the data of Employee having Employee_Name Akhil
+SELECT * FROM Employee WHERE Employee_Name = 'Akhil';
+
+============================================================
+4. Write a select statement on the employee table whose employee name has 'an' in it.
+Ans.
+--SELECT Statement for Showing the data of Employees having an in their name.
+SELECT * FROM Employee WHERE Employee_Name LIKE '%an%';
+
+============================================================
+5. Write a select statement on employee table whose salary is not more than 10000
+Ans.
+--SELECT Statement for showing the Employees having salary not more than  10000
+SELECT * FROM Employee WHERE Salary <= 10000;
+
+============================================================
+6. Write a select statement on employee table whose salary is not less than 10000
+Ans.
+--SELECT Statement for showing the Employees having salary not less than  10000
+SELECT * FROM Employee WHERE Salary >= 10000;
+
+============================================================
+7. Write a select statement on employee table whose salary is greater than 10000 and less than 20000
+Ans.
+--SELECT Statement for showing the Employees having salary greater than 10000 and less than 20000
+SELECT * FROM Employee WHERE Salary > 10000 AND Salary < 20000;
+
+============================================================
+8. Write a select statement on the employee table whose salary column is not having value.
+Ans.
+--SELECT Statement for shwoing NULL values in the salary column
+SELECT * FROM Employee WHERE Salary IS NULL;
+
+============================================================
+9. Write a select statement on the employee table whose salary column is having value.
+Ans.
+--SELECT Statement for shwoing when there is a values in the salary column
+SELECT * FROM Employee WHERE Salary IS NOT NULL;
+
+============================================================
+10. Write a select statement on employee table using IN, NOT IN, AND and OR
+Ans.
+--SELECT Statement for showing Employees data who are getting 70000, 50000, 60000
+SELECT * FROM Employee WHERE Salary IN(70000, 50000, 60000);
+
+--SELECT Statement for showing Employees data who's pincode is not 500060, 500038
+SELECT * FROM Employee WHERE Pincode NOT IN(500060, 500038);
+
+--SELECT Statement for showing Employees who are joined on '01-JUN-2022' AND getting salary of 50000
+SELECT * FROM Employee WHERE Emp_Join_Date = '01-JUN-2022' AND Salary = 50000;
+
+--SELECT Statement for showing Employees who are working as PL/SQL Developer OR SQL Developer
+SELECT * FROM Employee WHERE Emp_Designation = 'PL/SQL Developer' OR Emp_Designation = 'SQL Developer';
+
+============================================================
+11. Write a select statement on the employee table, sort it in ascending order and descending order based on employee join date.
+Ans.
+--SELECT Statement for showing Employee data based on their joining date in ascending order.
+SELECT * FROM Employee ORDER BY Emp_Join_Date;
+
+--or We can use ASC to store in ascending order, by Default ORDER BY will store in ascending order, so it is optional to use.
+SELECT * FROM Employee ORDER BY Emp_Join_Date ASC;
+
+============================================================
+12. Write a select statement on the employee table and concatenate employee name and emp designation as employee detail.
+Ans.
+--SELECT Statement for Employee details by concatinating Employee_Name and Employee_designation
+SELECT Employee_Name || '-' || Emp_Designation AS "Employee details" FROM Employee;
+
+--or we can use the CONCATE() Function to concatenate two columns.
+
+SELECT CONCAT(Employee_Name, Emp_Designation) AS "Employee details" FROM Employee;
+
+============================================================
+13. Write a select statement on the employee table whose employee name has 'n' in it as the fourth letter.
+Ans.
+--SELECT Statement for getting Employee details who has n in their name at fourth letter.
+SELECT * FROM Employee WHERE Employee_Name LIKE '___n%';
+
+============================================================
+14. Write a select statement on the employee table whose employee name has 'b' in it as the second position and 'd' in the second last position.
+Ans.
+--SELECT Statement for getting Employee details who are having b in the second position and d in the last second position
+SELECT * FROM Employee WHERE Employee_Name LIKE '_b%d_';
+
+============================================================
+15. Write a select statement on the employee table whose employee name doesn't have 'an' in it.
+Ans.
+--SELECT Statement for showing Employees details who are not having an in their name
+SELECT * FROM Employee WHERE Employee_Name NOT LIKE '%an%';
+
+============================================================
+16. Write a select statement on the employee table whose employee no is not 1004.
+Ans.
+--SELECT Statement for showing Employees who's Employee no is not 1004
+SELECT * FROM Employee WHERE Employee_no != 1004;
+
+--we can also use <> operator for selecing not equals to values
+SELECT * FROM Employee WHERE Employee_no <> 1004;
+
+============================================================
+17. Use the student table to fetch the student details where subject marks are null.
+Ans.
+--SELECT Statement for showing students details who's marks are null
+SELECT * FROM Student WHERE Maths IS NULL;
+
+============================================================

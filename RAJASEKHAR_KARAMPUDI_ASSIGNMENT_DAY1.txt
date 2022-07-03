@@ -1,0 +1,148 @@
+============================================================
+
+1. Read through Different Data Types available in SQL
+Ans.
+We have following datatypes in Oracle SQL:
+	I. Character datatypes
+		1. CHAR: It is used to Store Character data with predefined length, Default size is 1 byte per row, it can store up to 2000 bytes.
+		2. NCHAR: It is used to Store National Character data like UNICODE, it can store up to 2000 bytes.
+		3. VARCHAR2(size): It is used to store variable string data within the predefined length. It can store up to 4000bytes.
+		4. NVARCHAR2(size): It is used to store UNICODE string data within the predefined length. It can store upto 4000bytes.
+	II. NUMBER datatypes
+		1. NUMBER(p,s): It is used to store the numbers, It contains precision p and scale s, The precision p can range from 1 to 38 and scale s can range from -84 to 127.
+		2. FLOAT(p): It is a subtype of NUMBER data type, The precision p can range from 1 to 126.
+		3. BINARY_FLOAT: It is used for binary precision(32-bit). It requires 5 bytes, including length byte.
+		4. BINARY_DOUBLE: It is used for double binary precision (64-bit). It requires 9 bytes, including length byte.
+	III. DATE and TIME datatypes
+		1. DATE: It is used to store a valid date format with a fixed length, It ranges from 1-JAN-4712 BC to 31-DEC-9999 AD.
+		2. TIMESTAMP: It is used to store the valid date YYYY-MM-DD with hh:mm:ss format.
+	IV. BINARY datatype
+		1. BLOB: It is used to specify unstructured binary data. It ranges upto 4GB.
+		2. BFILE: It is used to store binary data in an external file. it ranges upto 4GB.
+		3. RAW(size): It is used to specify variable length raw binary data. It ranges upto 2000 bytes per row.
+		4. LONG RAW: It is used to speciry variable length raw binary data, It ranges upto 4GB per row.
+
+============================================================
+
+2. What is RDBMS?
+Ans.
+RDBMS(Relational Database Management System) is a Collection of programs that let others to CREATE, UPDATE or INTERACT with a Relational Database. 
+It stores the data in the form of tables.
+
+============================================================
+
+3. What are different DDL &. DMLs? Explain with examples.
+Ans.
+DDL means Data Definition Language. It is used to CREATE, ALTER, TRUNCATE, DROP the structure of database objects in SQL.
+1. CREATE - It is used to create a new table in the database.
+CREATE TABLE Employees(Name VARCHAR2(30), Email VARCHAR2(50), DOB DATE);
+
+2. ALTER - It is used to alter the structure of the database. This change could be either to modify the characteristics of an existing attribute or probably to add a new attribute.
+ALTER TABLE Employees ADD Department VARCHAR2(10);
+ALTER TABLE Employees MODIFY Department NOT NULL;
+
+3. TRUNCATE - It is used to delete all the rows from the table.
+TRUNCATE TABLE Employees;
+
+4.  DROP - It is used to delete both the structure and the records stored in the table.
+DROP TABLE Employees;
+
+DML means Data Manipulation Language. It is used to SELECT, INSERT, UPDATE, DELETE in database.
+1. SELECT - It is used to show the records of the specified table and also to show the particular columns by using the WHERE clause.
+SELECT * FROM Employees;
+SELECT Name, Email FROM Employees;
+SELECT * FROM Employees WHERE DOB='01-JAN-1999';
+
+2. INSERT - It is used to INSERT data into the row of a table.
+INSERT INTO Employees (Name, Email, DOB) VALUES('Rajasekhar', 'mrrajasekhar09@gmail.com', '18-MAY-1999');
+INSERT INTO VALUES('James', 'example@gmail.com', '01-JAN-1998');
+
+3. UPDATE - The command is used to update or modify the value of a column in the table.
+UPDATE Employees SET Name='Rajasekhar Karampudi' WHERE Email='mrrajasekhar09@gmail.com';
+
+4. DELETE - It is used to remove one or more rows from a table.
+DELETE FROM Employees WHERE Name='Rajasekhar Karampudi';
+
+============================================================
+
+4. Differentiate between Truncate and Delete statement.
+Ans.
+TRUNCATE removes all the rows from a table and the changes will be commited automatically, we can not ROLLBACK once we execute TRUNCATE.
+whereas DELETE removes one or multiple rows based on the condition, it is a DML command, we have to COMMIT it manully and it can be rolled back.
+
+============================================================
+
+5. Create a Student Table containing student information and insert data.
+Ans. 
+-- Student Table Creation
+CREATE TABLE Student(First_Name VARCHAR2(30) NOT NULL, Last_Name VARCHAR2(30) NOT NULL, Department VARCHAR2(20), Roll_Number NUMBER PRIMARY KEY);
+
+-- Data insertion into Student Table
+INSERT INTO Student VALUES('Rajasekhar', 'Karampudi', 'Civil', 1);
+INSERT INTO Student VALUES('Shankar', 'Vemula', 'EEE', 2);
+INSERT INTO Student VALUES('Yashodha', 'Charla', 'Civil', 3);
+INSERT INTO Student VALUES('Vinay', 'Alakuntla', 'Mech', 4);
+INSERT INTO Student VALUES('Mohan', 'Jarpala', 'Civil', 5);
+
+============================================================
+
+6. Create a Marks Table containing marks of each student subject wise and insert data. (Each subject exam is held for a total of 200 marks)
+Ans.
+-- Marks Table Creation
+CREATE TABLE Marks(Full_Name VARCHAR2(50) NOT NULL, Subject VARCHAR2(20), Marks NUMBER(3));
+
+/*Inserting data into Marks Table*/
+INSERT INTO Marks VALUES('Yashodha Charla', 'Maths', 189);
+INSERT INTO Marks VALUES('Rajasekhar Karampudi', 'Physics', 134);
+INSERT INTO Marks VALUES('Shankar Vemula', 'Social', 190);
+INSERT INTO Marks VALUES('Vinay Alakuntla', 'Maths', 137);
+INSERT INTO Marks VALUES('Mohan Jarpala', 'Biology' 144);
+
+============================================================
+
+7. Create some duplicate marks and write a query to eliminate duplicate marks.
+Ans.
+/*Duplicate data insertion into Marks Table*/
+INSERT INTO Marks VALUES('Yashodha Charla', 'Maths', 189);
+INSERT INTO Marks VALUES('Rajasekhar Karampudi', 'Physics', 134);
+INSERT INTO Marks VALUES('Shankar Vemula', 'Social', 190);
+INSERT INTO Marks VALUES('Yashodha Charla', 'Maths', 189);
+INSERT INTO Marks VALUES('Vinay Alakuntla', 'Maths', 137);
+INSERT INTO Marks VALUES('Mohan Jarpala', 'Biology' 144);
+INSERT INTO Marks VALUES('Shankar Vemula', 'Social', 190);
+INSERT INTO Marks VALUES('Rajasekhar Karampudi', 'Physics', 134);
+
+-- QUERY for selecting only Distinct values
+SELECT DISTINCT Full_Name, Subject, Marks FROM Marks;
+
+============================================================
+
+8. Write a query to get the student, subject, marks, percentage of marks obtained in that subject for each student. And display calculated percentage column name as pct in the query.
+Ans.
+-- QUERY for selecting Full_Name, Subject, Marks, percentage from Marks Table
+SELECT Full_Name, Subject, Marks, (Marks/200)*100 AS pct FROM Marks;
+
+============================================================
+
+9. Insert NULL data for a particular subject in the marks table when the student was absent for that exam.
+Ans.
+-- QUERY for inserting NULL data
+INSERT INTO Marks VALUES('Yogesh pasunuti', 'Maths', null);
+
+============================================================
+
+10. Give some examples for concatenation and format the output using aliases.
+
+-- concatenation Expmples:
+SELECT Full_Name||'/'||Marks||'/'||Subject AS Results FROM Marks;
+SELECT 'Hello! '|| Full_Name || ', You have scored '|| Marks || ' marks in ' || Subject || ' Subject.' AS Results FROM Marks;
+
+============================================================
+
+11. Explain about projection and selection and how they differ from each other. 
+Ans.
+Projection: This is a vertical subset of table column, including all rows. It may include one column, two columns or all the table columns.
+Selection: This is a horizontal subset of table columns, It may include one row, two rows or all table rows, which the QUERY returns based on the WHERE condition.
+Difference: The difference between selection and projection is Selection means which rows are to be returned and Projection means choosing which columns the query shall return.
+
+============================================================

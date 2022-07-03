@@ -1,0 +1,267 @@
+============================================================
+1. Practice Anonymous block statements.
+Ans.
+Here are some of the different Anonymous PL/SQL blocks.
+Example_1:
+    DECLARE
+    BEGIN
+    NULL;
+    END;
+    /
+/*
+Declared a simple block with DECLARE, BEGIN and END sections which don't perform any action.
+*/
+
+Example_2:
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Proxima360');
+    END;
+    /
+/*
+The above code consist of only BEGIN block with a print statement printing message of Proxima360.
+*/
+
+Example_3:
+    DECLARE
+        First_Name VARCHAR2(30) := 'Rajasekhar';
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(First_Name);
+    END;
+    /
+/*
+The above code consist of DECLARE and BEGIN blocks,
+In the DECLARE block we are declaring a variable of First_Name with a datatype of VARCHAR2, and initialized it with a value.
+In the BEGIN block, printing the value of variable First_Name.
+*/
+
+Example_4:
+    DECLARE
+        First_Name VARCHAR2(30);
+    BEGIN
+        First_Name := 'Rajasekhar';
+        DBMS_OUTPUT.PUT_LINE(First_Name);
+    END;
+    /
+/*
+In the above code, declaring a variable without initializing it and in the BEGIN block initializing it with a value, then printing it.
+*/
+
+Example_5:
+    DECLARE
+        First_Name Employee.Emp_Name%TYPE;
+    BEGIN
+        SELECT Emp_Name INTO First_Name FROM Employee WHERE Emp_ID = 101;
+        DBMS_OUTPUT.PUT_LINE(First_Name);
+    END;
+    /
+/*
+In the above code, i'm declaring a variable First_Name and giving the datatype from Employee table Emp_Name column using %TYPE operater.
+Then writing a select query to get the Emp_name and initializing that value to First_Name variable.
+And printing the First_Name value.
+*/
+
+============================================================
+2. Practice Anonymous block statements with variables being declared and initialized. 
+Ans.
+Here are the Examples for Anonymous blocks which are declared and initialized.
+Example_1:
+    DECLARE
+        First_Name VARCHAR2(30) := 'Rajasekhar';
+        Last_Name VARCHAR2(30) := 'Karampudi';
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE(First_Name || ' ' || Last_Name);
+    END;
+    /
+/*
+In the above code, i have declared two variables First_Name and Last_Name with values,
+In the Begin block, i performed the concatination and printed the value.
+*/
+
+Example_2:
+    DECLARE
+        L_Emp_ID Employee.Emp_Name%TYPE := 112;
+        L_Emp_Name Employee.Emp_Name%TYPE := 'Raja sekhar';
+        L_Dept_Name Employee.Dept_Name%TYPE := 'IT';
+        L_Salary Employee.Salary%TYPE := 9900;
+    BEGIN
+        INSERT INTO Employee VALUES(L_Emp_ID, L_Emp_Name, L_Dept_Name, L_Salary);
+        DBMS_OUTPUT.PUT_LINE('Employee data added to table');
+    END;
+    /
+/*
+In the above code, i am declaring 4 variables with datatypes from Employees table and assigning values to it.
+Then in the BEGIN section i was inserting all the values into the employees table using the variables,
+Then printing a message as Employee data added.
+*/
+
+Example_3:
+    DECLARE
+        L_Emp_ID CONSTANT NUMBER := 102;
+        L_Emp_Name Employee.Emp_Name%TYPE;
+        L_Dept_Name Employee.Dept_Name%TYPE;
+        L_Salary Employee.Salary%TYPE;
+    BEGIN
+        SELECT Emp_Name, Dept_Name, Salary INTO L_Emp_Name, L_Dept_Name, L_Salary FROM Employee WHERE Emp_ID = L_Emp_ID;
+        DBMS_OUTPUT.PUT_LINE(
+        'Here is the Employee details of ' 
+        || L_Emp_Name || ', He is working in ' 
+        || L_Dept_Name || ' Department with the salary of ' 
+        || L_Salary || ' Rupees per month');
+    END;
+    /
+/*
+In the above code, i am declaring a constant variable L_Emp_ID with a value, and some more variables with datatype form employee table.
+In the begin block i was selecting Emp_name, dept_name, salary of the emp_id which is declared in the declare section.
+And storing them in the Local variables,
+Then printing a message using all the variables.
+*/
+
+============================================================
+3. Practice Anonymous block statements with variables being declared using %type attribute. 
+Ans.
+Examples for pl/sql statements with %type variables.
+Example_1:
+    DECLARE
+        L_Merch Merch.Merch%TYPE;
+        L_Division Division.Division%TYPE;
+        L_Div_Name Division.Div_Name%TYPE;
+        L_Buyer Division.Buyer%TYPE;
+        L_D_Merch Division.Merch%TYPE;
+        L_Total_Market_amt Division.Total_market_amt%TYPE;
+    BEGIN
+        SELECT MERCH INTO L_Merch FROM MERCH WHERE MERCH_NAME = 'Kelly Johnson';
+        SELECT Division, Div_Name, Buyer, Merch, Total_Market_amt INTO L_Division, L_Div_Name, L_Buyer, L_D_Merch, L_Total_Market_amt FROM Division WHERE MERCH = L_Merch;
+    END;
+    /
+/*
+Here i'm declaring variables from taking datatypes of merch and division tables,
+assigning L_Merch with the value from merch table where merch_name is kelly johnson,
+using that L_Merch value i was getting information from division table.
+*/
+
+Example_2:
+    DECLARE
+        L_Dept_ID Departments.Dept_ID%TYPE;
+        L_Dept_Name Employee.Dept_Name%TYPE;
+    BEGIN
+        L_Dept_ID := 112;
+        SELECT Dept_Name INTO L_Dept_Name FROM Departments WHERE Dept_ID = L_Dept_ID;
+        UPDATE Employee SET Salary = Salary+(10*salary/100) WHERE Dept_Name = L_Dept_Name;
+    END;
+    /
+/*
+In the above code, i am declaring two variables by taking their datatypes form tables using %type.
+In the begin block i have assigned a value for L_Dept_ID, and getting the department name from departments table of that id.
+then updating all the employees salary of that department to 10%.
+*/
+
+============================================================
+4. Practice nested Anonymous block statements.
+Ans.
+Here are the Example for Nested blocks.
+Example:
+    DECLARE
+        L_Emp_Name Employee.Emp_Name%TYPE;
+        L_Salary Employee.Salary%TYPE;
+        L_Emp_ID Employee.Emp_ID%TYPE;
+    BEGIN
+        BEGIN
+            L_Emp_ID := 101;
+            SELECT SALARY INTO L_Salary FROM EMPLOYEE WHERE Emp_ID = L_Emp_ID;
+            L_Salary := L_Salary + (10*L_Salary/100);
+            UPDATE Employee SET Salary = L_Salary WHERE Emp_ID = L_Emp_ID;
+            SELECT Emp_Name, Salary INTO L_Emp_Name, L_Salary FROM Employee WHERE Emp_ID = L_Emp_ID;
+            DBMS_OUTPUT.PUT_LINE('Hello ' || L_Emp_Name || ' Your salary updated to ' || L_Salary || ' rupees.');
+        END;
+        
+        BEGIN
+            L_Emp_ID := 102;
+            SELECT SALARY INTO L_Salary FROM EMPLOYEE WHERE Emp_ID = L_Emp_ID;
+            L_Salary := L_Salary + (5*L_Salary/100);
+            UPDATE Employee SET Salary = L_Salary WHERE Emp_ID = L_Emp_ID;
+            SELECT Emp_Name, Salary INTO L_Emp_Name, L_Salary FROM Employee WHERE Emp_ID = L_Emp_ID;
+            DBMS_OUTPUT.PUT_LINE('Hello ' || L_Emp_Name || ' Your salary updated to ' || L_Salary || ' rupees.');
+        END;
+        
+        BEGIN
+            L_Emp_ID := 103;
+            SELECT SALARY INTO L_Salary FROM EMPLOYEE WHERE Emp_ID = L_Emp_ID;
+            L_Salary := L_Salary + (15*L_Salary/100);
+            UPDATE Employee SET Salary = L_Salary WHERE Emp_ID = L_Emp_ID;
+            SELECT Emp_Name, Salary INTO L_Emp_Name, L_Salary FROM Employee WHERE Emp_ID = L_Emp_ID;
+            DBMS_OUTPUT.PUT_LINE('Hello ' || L_Emp_Name || ' Your salary updated to ' || L_Salary || ' rupees.');
+        END;
+    END;
+    /
+/*
+In the above code, i have declared 3 variables L_Emp_Name, L_Emp_ID, L_Salary,
+In the begin block, i have created nested blocks for each employee and gave the different amount of hikes for each.
+And printing message for each employee as their salary updated.
+*/
+
+============================================================
+5. Give the example for scope of variable being used.
+Ans.
+Example for scope in pl/sql.
+DECLARE
+    L_Student_Name Students.Student_Name%TYPE;
+BEGIN
+    DECLARE
+        Marks NUMBER;
+    BEGIN
+        SELECT MAX(maths) INTO Marks FROM students;
+        SELECT student_name INTO L_Student_Name FROM students WHERE maths = Marks;
+        DBMS_OUTPUT.PUT_LINE(L_Student_Name ||', Congrants you got the highest score of ' || Marks||' in Maths.');
+    END;
+    
+    DECLARE
+        Marks NUMBER;
+    BEGIN
+        SELECT MAX(social) INTO Marks FROM students;
+        SELECT student_name INTO L_Student_Name FROM students WHERE social = Marks;
+        DBMS_OUTPUT.PUT_LINE(L_Student_Name ||', Congrants you got the highest score of ' || Marks||' in social.');
+    END;
+    --Below line will won't execute coz it don't know what is Marks, we are accessing it out of the scope.
+    --DBMS_OUTPUT.PUT_LINE(Marks || ' are the hightest marks in Social.');
+END;
+/
+/*
+The above code is having a variable L_Student_Name, in the begin blocks there are two nested blocks which are having marks variables.
+each block can able to access the outer L_Student_Name variable, but at the end of outer block i was trying to access the marks which is declared inside, so it can't access it.
+*/
+============================================================
+6. Practice Anonymous block statements using different operators.
+Ans.
+Examples of pl/sql statements with different operators.
+Example_1:
+--Using addition, subtraction, concatenation operaters.
+DECLARE
+    L_Student_Name Students.Student_Name%TYPE;
+    L_Marks NUMBER;
+    L_Maths NUMBER;
+    L_Physics NUMBER;
+    L_Social NUMBER;
+BEGIN
+    L_Student_Name := 'Shankar';
+    SELECT Maths, Physics, Social INTO L_Maths, L_Physics, L_Social FROM Students WHERE Student_Name = L_Student_Name;
+    L_Marks := 300 - (L_Maths+L_Physics+L_Social);
+    DBMS_OUTPUT.PUT_LINE(L_Student_Name ||', You missed ' || L_Marks || ' Marks.');
+END;
+/
+
+Example_2:
+--Using multiplication, divide operaters.
+DECLARE
+    L_Student_Name Students.Student_Name%TYPE;
+    L_Marks NUMBER;
+    L_Maths NUMBER;
+    L_Physics NUMBER;
+    L_Social NUMBER;
+BEGIN
+    L_Student_Name := 'Rajasekhar';
+    SELECT Maths, Physics, Social INTO L_Maths, L_Physics, L_Social FROM Students WHERE Student_Name = L_Student_Name;
+    L_Marks := ((L_Maths+L_Physics+L_Social)/300)*100;
+    DBMS_OUTPUT.PUT_LINE(L_Student_Name ||', You scored ' || L_Marks || '% in Final exams.');
+END;
+/
+============================================================

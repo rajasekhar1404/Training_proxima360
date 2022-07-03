@@ -1,0 +1,315 @@
+==================================================
+1). Give the syntax with examples for the record type
+Ans.
+Syntax for creating A recor type.
+	TYPE name_for_type IS RECORD (column1 datatype, column2 datatype...);
+
+Example:
+/*
+Following example will create a RECORD of type emp_type with allocated attributes,
+and declared a variable of emp_data with the user created RECORD data type,
+then in the begin block assigned the values to all the attributes in the emp_data,
+Then inserted all those values into the employee table.
+and printing a message as the user data added into table.
+*/
+DECLARE
+    TYPE emp_type IS RECORD
+    (Emp_id NUMBER,
+    Emp_name VARCHAR2(30),
+    Emp_dept VARCHAR2(30),
+    Emp_salary NUMBER
+    );
+    emp_data emp_type;
+BEGIN
+    emp_data.Emp_id := 113;
+    emp_data.Emp_name := 'Prathap';
+    emp_data.Emp_dept := 'Admin';
+    emp_data.Emp_salary := 5500;
+    
+    INSERT INTO Employee VALUES(emp_data.Emp_id, emp_data.Emp_name, emp_data.Emp_dept, emp_data.Emp_salary);
+    DBMS_OUTPUT.PUT_LINE(emp_data.Emp_name || ' data added into employee table.');
+END;
+/
+==================================================
+2). Create a record for buyer table data.
+Ans.
+Here is an example for creating a record in using it on buyer table.
+/*
+Following script will create a RECORD of buyer_type using the datatypes from buyer table,
+I have declared a variable buyer_data with the buyer_type datatype,
+And assigned the values to all the variables in buyer.data using select into where the buyer value is given by user.
+then i have printed the retrived values in a message using line breaks(CHR(10)).
+*/
+DECLARE
+    TYPE buyer_type IS RECORD
+    (L_Buyer buyer.buyer%TYPE,
+    L_Buyer_name buyer.buyer_name%TYPE,
+    L_Buyer_phone buyer.buyer_phone%TYPE,
+    L_Buyer_fax buyer.buyer_fax%TYPE
+    );
+    buyer_data buyer_type;
+BEGIN
+    SELECT buyer, buyer_name, buyer_phone, buyer_fax 
+    INTO 
+    buyer_data.L_Buyer, 
+    buyer_data.L_Buyer_name, 
+    buyer_data.L_Buyer_phone, 
+    buyer_data.L_Buyer_fax
+    FROM Buyer WHERE Buyer = :val;
+    
+    DBMS_OUTPUT.PUT_LINE('Buyer id: ' ||buyer_data.L_Buyer || CHR(10)
+                        ||'Buyer name: ' ||buyer_data.L_Buyer_name || CHR(10)
+                        ||'Buyer phone: '||buyer_data.L_Buyer_phone || CHR(10)
+                        ||'Buyer fax: ' ||buyer_data.L_Buyer_fax);
+END;
+/
+================================================== 
+3). What are the advantages of using %ROWTYPE?
+Ans.
+Advantages of ROWTYPE attribute.
+1. ROWTYPE can store a complete row from a database table.
+2. We don't need to know the datatypes of columns in a table, we can insert data using the column name and ROWTYPE identifier.
+3. It makes the script look clean due to less number of declarations.
+4. It can get the datatype dynamically from each column, so even a table datatype is modified, the script will still works by taking the new datatype.
+================================================== 
+4). How to access the fields in a record?  
+Ans.
+To access the fields in a user created record, we have to use the variable.column_name
+Example:
+	I have a record of name buyer_type which is having the column name of L_Buyer, L_Buyer_name, L_Buyer_phone, L_Buyer_fax.
+When i assign the data into a record using select statement using record variables like below,
+    SELECT buyer, buyer_name, buyer_phone, buyer_fax 
+    INTO 
+    buyer_data.L_Buyer, 
+    buyer_data.L_Buyer_name, 
+    buyer_data.L_Buyer_phone, 
+    buyer_data.L_Buyer_fax
+    FROM Buyer WHERE Buyer = :val;
+each variable get allocated with it's associated value, then we can retrive the data from the variables by writin a print statement.
+    DBMS_OUTPUT.PU_LINE(
+	buyer_data.L_Buyer || 
+	buyer_data.L_Buyer_name ||
+	buyer_data.L_Buyer_phone ||
+	buyer_data.L_Buyer_fax);
+
+================================================== 
+5). Give the syntax with examples for table type 
+Ans.
+Here is the syntax for table type:
+	TYPE name_of_type IS TABLE OF datatype INDEX BY BINARY_INTEGER;
+
+Here is an example for Table type:
+/*
+Following code will create a table type using the datatype of employee.dept_name,
+and a variable is assigned with the table datatype,
+Then assigning the values by specifing the position of it.
+and retriving the data from each variable.
+*/
+DECLARE
+    TYPE emp_table_type IS TABLE OF 
+    employee.dept_name%TYPE
+    INDEX BY BINARY_INTEGER;
+    emp_data emp_table_type;
+BEGIN
+    emp_data(1) := 'raja';
+    emp_data(2) := 'sekhar';
+    emp_data(3) := 'karampudi';
+
+    DBMS_OUTPUT.PUT_LINE(emp_data(1));
+    DBMS_OUTPUT.PUT_LINE(emp_data(2));
+    DBMS_OUTPUT.PUT_LINE(emp_data(3));
+END;
+/
+================================================== 
+6). Create a table-type with the employee name field from the emp table. 
+Ans.
+Here is an example for table-type with employee name column,
+/*
+Following code will create the table type of emp_table_type with employee table emp_name column,
+and declared a variable L_emp_name with table type,
+Then in the begin block L_emp_name(1) is assigned with the name of employee of emp id entered by user.
+Then it will print the message with emp name.
+*/
+DECLARE
+    TYPE emp_table_type IS TABLE OF 
+    employee.emp_name%TYPE
+    INDEX BY BINARY_INTEGER;
+    
+    L_emp_name emp_table_type;
+BEGIN
+    SELECT Emp_Name INTO L_emp_name(1) FROM Employee WHERE emp_id = :id;
+    DBMS_OUTPUT.PUT_LINE('Name of the employee '||L_emp_name(1));
+END;
+/
+==================================================
+7). Assign random data into table type for 5 indexes using for loop.
+Ans.
+Example for assigning values to table type variables using loop.
+/*
+Below example will create a table type of tb_type,
+And declared a variable of L_City_name with table type datatype.
+Then in the begin block we are running a for loop in the range of 1 to 5,
+retriving the data from city table and assigning the values of them to the table datatype variable.
+And printing the city name for each iteration.
+*/
+DECLARE
+    TYPE tb_type IS TABLE OF
+    VARCHAR2(30)
+    INDEX BY BINARY_INTEGER;
+    
+    L_City_name tb_type;
+BEGIN
+    For i IN 1..5 LOOP
+    SELECT City_name INTO L_City_name(i) FROM City WHERE s_no = i;
+        DBMS_OUTPUT.PUT_LINE('Name of the city: '||L_City_name(i));
+    END LOOP;
+END;
+/
+==================================================
+8). What is the use of extend function in table type?
+Ans.
+Extends allocates the memory and appends an element to the VARRAY,
+If used without argument it appends single null element and if used with argument then appends n number of elements to the collection.
+Where n is the integer you supplied as arguments to the procedure EXTEND.
+
+==================================================
+9). What are the types of cursors used in PLSQL?
+Ans.
+There are two types of cursers in PL/SQL.
+1. Implicit cursors.
+	These are the predefined cursors from oracle,
+	it will automatically open when a dml statement is executed and colses after the execution.
+	We can not manually open or fetch the data using implicit cursors.
+2. Explicit cursors.
+	These are the user defined cursors,
+	It can store the data of a statement executed which is used in the cursor creation,
+	we can manually open and close this cursor.
+	By using explicit cursors we can access the data which is retrived in the select statement of cursor.
+	We can track which row is begin processed.
+==================================================
+10). Create a cursor having buyer and buyer name from the buyer table for buyers greater than 1200.
+Ans.
+/*
+Below code will create a cursor of buyer_cur with the data of buyer, buyer_name from buyer table.
+Then a loop is fetching the data from the cursor and printing it till there is no data in the cursor.
+*/
+DECLARE
+    CURSOR buyer_cur IS 
+    SELECT Buyer, Buyer_name FROM buyer;
+    
+    L_Buyer NUMBER;
+    L_Buyer_name VARCHAR2(30);
+BEGIN
+    OPEN buyer_cur;
+    LOOP
+    FETCH buyer_cur INTO L_Buyer, L_Buyer_name;
+    DBMS_OUTPUT.PUT_LINE('Buyer_id: '||L_Buyer ||' Buyer_name: '||L_Buyer_name);
+    EXIT WHEN buyer_cur%NOTFOUND;
+    END LOOP;
+    CLOSE buyer_cur;
+END;
+/
+==================================================
+11). Practice all the cursor type attributes with examples for both implicit and explicit cursors.
+Ans.
+Implicit cursor examples:
+--ROWCOUNT
+/*
+Following example will gives the number of rows deleted by using implicit cursor rowcount.
+*/
+DECLARE
+    L_Dept_name employee.dept_name%TYPE := :val;
+BEGIN
+    DELETE FROM Employee WHERE Dept_name = L_Dept_name;
+    DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT ||' Rows affected.');
+END;
+/
+
+--NOTFOUND and FOUND
+/*
+Below script will update the salary when id is 2,
+If there is no data belongs to 2, it will go to if condition and prints no customers updated,
+If it finds any data then it will update the salary and prints the number of rows updated.
+*/
+
+DECLARE   
+   total_rows number(2);  
+BEGIN  
+   UPDATE  customers_1
+   SET salary = salary + 5000 where id = 2;  
+   IF sql%notfound THEN  
+      dbms_output.put_line('no customers updated');  
+   ELSIF sql%found THEN  
+      total_rows := sql%rowcount;  
+      dbms_output.put_line( total_rows || ' customers updated ');  
+   END IF;   
+END;  
+/
+
+--Explicit cursors:
+--NOTFOUND, FOUND, ISOPEN, ROWCOUNT
+DECLARE
+    CURSOR dept_cur IS 
+    SELECT DEPARTMENT_NAME, DEPARTMENT_ID FROM DEPARTMENTS WHERE LOCATION_ID = 1700;
+    
+    L_Dept_name departments.department_name%TYPE;
+    L_Dept_ID departments.department_id%TYPE;
+BEGIN
+    OPEN dept_cur;
+    LOOP
+        FETCH dept_cur INTO L_Dept_name, L_Dept_id;
+        IF dept_cur%FOUND THEN
+        DBMS_OUTPUT.PUT_LINE(L_Dept_name || ' ' || L_Dept_id);
+        ELSIF dept_cur%NOTFOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No data found.');        
+        END IF;
+        EXIT WHEN dept_cur%NOTFOUND;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE(dept_cur%ROWCOUNT || ' Row''s affected.');
+    CLOSE dept_cur;
+    IF dept_cur%ISOPEN THEN
+        DBMS_OUTPUT.PUT_LINE('cursor is still open.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Cursor closed.');
+    END IF;
+END;
+/
+==================================================
+12). Practice all the table types attributes with examples.
+Ans.
+--Extend
+DECLARE
+    TYPE my_nestedtable IS TABLE OF number;
+    nt_obj my_nestedtable := my_nestedtable();
+BEGIN
+    nt_obj.EXTEND;
+    nt_obj(1) := 10;
+    DBMS_OUTPUT.PUT_LINE(nt_obj(1));
+END;
+/
+
+--TRIM and COUNT
+DECLARE
+    TYPE my_nestedtable IS TABLE OF number;
+    nt_obj my_nestedtable := my_nestedtable(1,2,3,4,5);
+BEGIN
+    nt_obj.TRIM;
+    FOR i IN 1..nt_obj.COUNT
+    LOOP
+    DBMS_OUTPUT.PUT_LINE(nt_obj(i));
+    END LOOP;
+END;
+/
+
+--FIRST and LAST
+DECLARE
+    TYPE my_nestedtable IS TABLE OF number;
+    nt_obj my_nestedtable := my_nestedtable(1,2,3,4,5);
+BEGIN
+    FOR i IN nt_obj.FIRST..nt_obj.LAST
+    LOOP
+    DBMS_OUTPUT.PUT_LINE(nt_obj(i));
+    END LOOP;
+END;
+/
+==================================================

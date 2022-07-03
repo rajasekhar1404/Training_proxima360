@@ -1,0 +1,285 @@
+============================================================
+1. Write full syntax to create a table.
+Ans.
+Syntax:
+CREATE TABLE table_name (column1 datatype constraint, column2 datatype constraint....);
+
+Example:
+CREATE TABLE Employees(
+Emp_id NUMBER Primary key, 
+Emp_name VARCHAR2(30) NOT NULL, 
+Emp_dept VARCHAR2(30), 
+Salary NUMBER, 
+Joining_date DATE,
+CONSTRAINT constraint_fk FOREIGN KEY(Emp_dept) REFERENCES departments(dept_name)
+);
+
+============================================================
+2. What is Sequence in SQL? Explain with syntax.
+Ans.
+Sequence is a database object which is used to generate unique numbers, sequence is often used to generate primary key values.
+
+Here is the syntax.
+CREATE SEQUENCE sequence_name
+INCREMENT BY value
+START WITH value
+MAXVALUE | NOMAXVALUE
+MINVALUE | NOMINVALUE
+CYCLE | NOCYCLE
+CACHE n | NOCACHE
+
+Explanation:
+CREATE SEQUENCE is used to create a new sequence,
+INCREMENT BY is a value of difference for each sequence,
+START WITH is the starting value of the sequence,
+MAXVALUE is the highest value of the sequence, it is an optional keyword, if the sequence should be in reverse order we have to give negative value,
+MINVALUE is the minimum value of the sequence, it is also an optional keyword,
+CYCLE or NOCYCLE is used to specify either the sequence should startover after reaching the maxvalue, by defalut it is NOCYCLE,
+CACHE n or NOCACHE is used to let the database store predefined memory for the sequence, by default 20 sequences memory will be allocated, if we want to increase, we can do it.
+
+Example:
+CREATE SEQUENCE emp_id_gen
+INCREMENT BY 50
+START WITH 1
+MAXVALUE 5000
+CYCLE
+NOCACHE;
+
+============================================================
+3. What are wild cards? Give an example query containing the wildcards.
+Ans.
+wild cards are used to retrive the data when a part of it is known, we use wild cards in LIKE operater, 
+there are two wild cards,
+1. % - it represents a sequence of any number of characters including zero.
+SELECT * FROM Employee WHERE Emp_Name LIKE 'A%';
+
+2. _(UNDERSCORE) - It represents a single character of a string, it is used when length or position of a perticular character is known.
+SELECT * FROM Employee WHERE Emp_name LIKE '___a____';
+
+============================================================
+4. List out all the different Database objects.
+Ans.
+we have different types of database objects, here are they.
+1. TABLE
+2. VIEW
+3. SEQUENCE
+4. SYNONYM
+5. INDEX
+
+============================================================
+5. To see the details about all the sequences created in the current schema what table do we refer to?
+Ans.
+we have user_sequences table to see all the sequences created in that schema,
+here is the syntax:
+SELECT * FROM user_sequences;
+
+============================================================
+6. Find all items which are not sold at S3.
+Ans.
+/*
+In order to solve this question we need
+1. total items there in S3,
+2. Find all sold items,
+3. compare both and remove the S3 items from all items.
+*/
+SELECT ITEM FROM PRICE WHERE ITEM NOT IN (SELECT ITEM FROM STORE WHERE STORE_NAME = 'S3');
+
+============================================================
+7. Find all items which are not belonging to any class.
+Ans.
+/*
+To solve this issue we need,
+1. all the classes,
+2. get all the items,
+3. check compare the class of each item and find which doesn't have any class.
+*/
+
+SELECT i.ITEM FROM ITEM i, CLASS c WHERE c.CLASS(+) = i.CLASS AND i.CLASS IS NULL;
+
+============================================================
+8. What is TCL? What are different types of TCL?
+Ans.
+TCL is transaction control language, which is used to save or undo the changes available in a transaction, 
+here are list of commands in TCL.
+1. COMMIT: it is used to save all the changes permanatly to the database.
+2. ROLLBACK: it is used to undo the changes available in transaction.
+3. SAVEPOINT: it is used to create points in the transaction to rollback or commit until perticular change.
+
+============================================================
+9. Write a query to calculate the average price in the price table for each store considering null to be 0.
+Ans.
+/*
+Steps to solve this question.
+1. change all the null values to 0,
+2. GROUP BY store,
+3. find the average for each store
+*/
+
+SELECT AVG(NVL(PRICE, 0)) FROM PRICE GROUP BY STORE;
+
+============================================================
+10. Calculate the profit for each item sold at any store.
+Ans.
+/*
+Steps to solve this question.
+1. find all the items which are sold,
+2. find the cost-price of all those items.
+*/
+
+SELECT ITEM, PRICE - COST AS PROFIT FROM PRICE WHERE PRICE IS NOT NULL;
+
+============================================================
+11. Fetch Dept, Class, Item no, Store and Price for every Item from given data sets.
+Ans.
+/*
+Steps to solve this question.
+1. Join CLASS and DEPT tables and get dept, class values,
+2. JOIN ITEM AND CLASS tables and get item values,
+3. JOIN ITEM AND STORE tables and get store values,
+4. JOIN PRICE and STORE tables and get price values
+*/
+
+SELECT DISTINCT i.item, s.store, c.class, d.dept, p.price
+FROM ITEM i, PRICE p, dept d, class c, store s 
+WHERE c.dept = d.dept AND
+i.class = c.class AND
+s.ITEM = i.ITEM AND
+p.ITEM = s.ITEM ORDER BY dept;
+
+============================================================
+12. Fetch all the items which are not sold to any store.
+Ans.
+/*
+Steps to solve this question.
+1. find all the unique items which are sold to stores,
+2. find all the items available in the items,
+3. compare both and find the items which are not sold to any store.
+*/
+
+SELECT DISTINCT ITEM FROM ITEM WHERE ITEM NOT IN (SELECT DISTINCT ITEM FROM STORE WHERE STORE IS NOT NULL);
+
+============================================================
+13. What are different character functions? Give example for each type.
+Ans.
+We have two types of character functions.
+1. CASE Manipulation functions.
+    i) UPPER - it is used to convert the string to capital case.
+    SELECT UPPER(Emp_name) FROM Emp;
+
+    ii) LOWER - It is used to convert the string to lower case.
+    SELECT LOWER(Emp_name) FROM Emp;
+
+    iii) INITCAP - it is used to change all the first letters to capital.
+    SELECT INITCAP(Emp_name) FROM Emp;
+
+2. Character manipulation functions.
+    i) LENGTH - It is used to find the number of characters available in a string.
+    SELECT LENGTH(FIRST_NAME) FROM Emp;
+
+    ii)SUBSTR - It is used to find the perticular portion of a string.
+    SELECT SUBSTR(FIRST_NAME, 0, 3) FROM Emp;
+
+    iii) INSTR - It is used find a character position in a string.
+    SELECT INSTR(FIRST_NAME, 'a') FROM Emp;
+
+    iv) LPAD - it is used to round the length of string to the given length towards left of a given character.
+    SELECT LPAD(FIRST_NAME, 'a', 3) FROM Emp;
+
+    v) RPAD - it is used to round the length of string to the given length towards the right side of a given character.
+    SELECT RPAD(FIRST_NAME, 'a', 3) FROM Emp;
+
+    vi) CONCAT - it is used to combine two strings into one, even if one of them is null, it will still concatenate it.
+    SELECT CONCAT(FIRST_NAME, LAST_NAME) FROM Emp;
+
+============================================================
+14. Write a query to copy only the table structure for the price table as price_1.
+Ans.
+Here is the query to copy only the structure of price table.
+
+CREATE TABLE price_1 AS SELECT * FROM PRICE WHERE 1=0;
+
+============================================================
+15. Fetch items where item department is even and class is odd.
+Ans.
+/*
+Steps to solve this question.
+1. Select the ITEM and CLASS from item table.
+2. Filter the records using mod function in the where clause
+*/
+
+SELECT ITEM, CLASS FROM ITEM WHERE MOD(ITEM, 2) = 0 AND MOD(CLASS, 2) <> 0;
+
+============================================================
+16. Print S1 as 'store1' S2 as 'store2', S3 as 'Store3' and 'store4' for other stores for the items which are not greater than 2000.
+Ans.
+/*
+Steps to solve this question.
+1. Select item. store_name from store table,
+2. keep the store_name in a case function,
+3. check when s1 then store1, s2-store2, s3-store3, if non of them give the else as store4,
+4. filter the total table where item are lesser are equal to 2000.
+*/
+
+SELECT ITEM, (
+CASE STORE_NAME
+WHEN 'S1' THEN 'store1'
+WHEN 'S2' THEN 'store2'
+WHEN 'S3' THEN 'store3'
+ELSE 'store4'
+END) as STORE_NAME
+FROM STORE WHERE ITEM <= 2000;
+
+============================================================
+17. Fetch item, dept, dept_desc, class, class_desc for every item present in item table.
+Ans.
+/*
+Steps to solve this question.
+1. JOIN item and departments table using dept,
+2. JOIN department and class table using dept,
+3. select item from item table, dept form dept table, dept_desc from dept table, class from class table, class_desc from class table.
+*/
+
+SELECT DISTINCT i.ITEM, d.DEPT, d.DEPT_DESC, c.CLASS, c.CLASS_DESC 
+FROM ITEM i, DEPT d, CLASS c 
+WHERE i.DEPT = d.DEPT AND
+d.DEPT = c.DEPT;
+
+============================================================
+18. Fetch all the items which are sold at more than 1 store.
+Ans.
+/*
+Steps to solve this quesiton.
+1. Creating a view to check the items sold multiple times,
+2. Group all the items which are sold more than once in store,
+3. Get the store and item of those items from store,
+4. Use the view to get the distinct items which are sold more than once.
+*/
+
+CREATE OR REPLACE VIEW sold_multiples AS SELECT DISTINCT STORE, ITEM FROM STORE WHERE ITEM IN (SELECT ITEM FROM STORE GROUP BY ITEM HAVING COUNT(ITEM) > 1);
+
+SELECT DISTINCT ITEM FROM sold_multiples;
+
+============================================================
+19. Fetch number of items sold at each store.
+Ans.
+/*
+Steps to solve this question.
+1. Group all the items by store,
+2. Select the number of items and store from store table.
+*/
+
+SELECT COUNT(ITEM), STORE FROM STORE GROUP BY STORE;
+
+============================================================
+20. Fetch item, dept, class from item table which has highest selling price.
+Ans.
+/*
+Steps to sove this question.
+1. Get the maximum price from price table,
+2. Get the item which is having that price from price table,
+3. Get the item, dept, class information for that item from items table.
+*/
+
+SELECT ITEM, DEPT, CLASS FROM ITEM WHERE ITEM = (SELECT ITEM FROM PRICE WHERE PRICE = (SELECT MAX(PRICE) FROM PRICE));
+
+============================================================
